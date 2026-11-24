@@ -1,0 +1,2390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GOLDSHEEP</title>
+  <style>
+    :root {
+      --bg: #08070a;
+      --panel: rgba(18, 15, 22, 0.94);
+      --panel-2: rgba(29, 24, 35, 0.96);
+      --gold: #f5b942;
+      --gold-bright: #ffe08a;
+      --text: #f7f4ec;
+      --muted: #a69fb5;
+      --line: rgba(245, 185, 66, 0.24);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --danger: #ff4a4a;
+      --success: #2ecc71;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(245, 185, 66, 0.14), transparent 36%),
+        radial-gradient(circle at 82% 28%, rgba(255, 145, 25, 0.13), transparent 42%),
+        linear-gradient(180deg, #0b090e 0%, #070609 100%);
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 18px;
+      background: rgba(10, 9, 13, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: var(--gold-bright);
+      text-shadow: 0 0 12px rgba(255, 224, 138, 0.28);
+      white-space: nowrap;
+    }
+
+    .wallet-area {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .wallet-btn {
+      background: linear-gradient(135deg, var(--gold-bright), #df8f16);
+      color: #160e02;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(245, 185, 66, 0.24);
+      white-space: nowrap;
+    }
+
+    .disconnect-btn {
+      background: rgba(255, 74, 74, 0.14);
+      color: #ff9c9c;
+      border: 1px solid rgba(255, 74, 74, 0.42);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .stage {
+      position: relative;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 18px calc(96px + env(safe-area-inset-bottom));
+      min-height: calc(100vh - 68px);
+    }
+
+    .hero-ram-bg {
+      position: fixed;
+      right: -4%;
+      bottom: 64px;
+      width: min(56vw, 760px);
+      height: min(82vh, 780px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.72;
+      mask-image: radial-gradient(ellipse 72% 76% at 62% 52%, #000 52%, transparent 95%);
+      -webkit-mask-image: radial-gradient(ellipse 72% 76% at 62% 52%, #000 52%, transparent 95%);
+    }
+
+    .hero-ram-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: contrast(1.06) saturate(1.08);
+    }
+
+    .content-layer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    .swap-shell {
+      max-width: 490px;
+      margin: 8px auto 0;
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 224, 138, 0.14);
+    }
+
+    .swap-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .swap-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .tool-icons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--panel-2);
+      border: 1px solid var(--line-soft);
+      color: var(--muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--line);
+      color: var(--gold-bright);
+    }
+
+    .token-box {
+      position: relative;
+      background: rgba(12, 10, 15, 0.84);
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      padding: 13px 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .token-box:focus-within {
+      border-color: rgba(245, 185, 66, 0.48);
+    }
+
+    .box-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .box-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .token-picker-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 11px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      max-width: 162px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .token-picker-btn span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .picker-popover {
+      display: none;
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: calc(100% + 4px);
+      background: #17141d;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      z-index: 45;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.82);
+    }
+
+    .picker-popover.open {
+      display: block;
+    }
+
+    .picker-search-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .picker-search-input {
+      flex: 1;
+      min-width: 0;
+      background: rgba(9, 8, 12, 0.94);
+      border: 1px solid var(--line-soft);
+      border-radius: 9px;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+    }
+
+    .picker-search-input:focus {
+      border-color: var(--gold);
+    }
+
+    .picker-add-btn {
+      background: rgba(245, 185, 66, 0.18);
+      border: 1px solid rgba(245, 185, 66, 0.42);
+      color: var(--gold-bright);
+      border-radius: 9px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .picker-list {
+      max-height: 184px;
+      overflow-y: auto;
+      display: grid;
+      gap: 4px;
+    }
+
+    .picker-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 9px 10px;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      gap: 8px;
+    }
+
+    .picker-item:hover {
+      background: rgba(245, 185, 66, 0.12);
+      border-color: rgba(245, 185, 66, 0.25);
+    }
+
+    .picker-item-sub {
+      color: var(--muted);
+      font-size: 11px;
+      font-family: monospace;
+      flex-shrink: 0;
+    }
+
+    .amt-input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 700;
+      text-align: right;
+      outline: none;
+    }
+
+    .amt-input[readonly] {
+      color: var(--gold-bright);
+    }
+
+    .max-chip {
+      background: rgba(245, 185, 66, 0.14);
+      border: 1px solid rgba(245, 185, 66, 0.35);
+      color: var(--gold-bright);
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .flip-wrap {
+      display: flex;
+      justify-content: center;
+      margin: -10px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .flip-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #272130, #15121a);
+      border: 1px solid var(--line);
+      color: var(--gold-bright);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    }
+
+    .slippage-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(12, 10, 15, 0.78);
+      border: 1px solid var(--line-soft);
+      font-size: 12px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .slip-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .slip-chip {
+      padding: 6px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--line-soft);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .slip-chip.active {
+      border-color: var(--gold);
+      color: var(--gold-bright);
+      background: rgba(245, 185, 66, 0.14);
+    }
+
+    .custom-slip-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(9, 8, 12, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 3px 7px;
+    }
+
+    .custom-slip-input {
+      width: 56px;
+      background: transparent;
+      border: none;
+      color: var(--gold-bright);
+      font-size: 16px;
+      font-weight: 700;
+      text-align: right;
+      outline: none;
+    }
+
+    .swap-cta {
+      width: 100%;
+      margin-top: 14px;
+      padding: 15px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold), #d98212);
+      color: #170e02;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(245, 185, 66, 0.28);
+    }
+
+    .swap-cta:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .meta-table {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line-soft);
+      display: grid;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      gap: 10px;
+    }
+
+    .meta-val {
+      color: var(--text);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .meta-val.gold {
+      color: var(--gold-bright);
+    }
+
+    .notice-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 11px;
+      background: rgba(245, 185, 66, 0.08);
+      border: 1px dashed rgba(245, 185, 66, 0.28);
+      color: #e8dec2;
+      font-size: 12px;
+      line-height: 1.55;
+      word-break: break-all;
+    }
+
+    .pool-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      max-width: 1060px;
+      margin: 8px auto 0;
+      align-items: start;
+    }
+
+    .pool-card {
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.55);
+    }
+
+    .pool-card-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--gold-bright);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pool-field {
+      margin-bottom: 14px;
+    }
+
+    .pool-label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .pool-input,
+    .pool-select {
+      width: 100%;
+      background: rgba(12, 10, 15, 0.88);
+      border: 1px solid var(--line-soft);
+      border-radius: 11px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      outline: none;
+    }
+
+    .pool-input:focus,
+    .pool-select:focus {
+      border-color: var(--gold);
+    }
+
+    .search-inline {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-sub-btn {
+      background: rgba(245, 185, 66, 0.16);
+      border: 1px solid rgba(245, 185, 66, 0.42);
+      color: var(--gold-bright);
+      border-radius: 11px;
+      padding: 0 13px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .hold-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(245, 185, 66, 0.12);
+      border: 1px solid rgba(245, 185, 66, 0.32);
+      color: var(--gold-bright);
+    }
+
+    .hold-status-pill.unheld {
+      background: rgba(255, 100, 100, 0.12);
+      border-color: rgba(255, 110, 110, 0.35);
+      color: #ffb4b4;
+    }
+
+    .quote-asset-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .quote-asset-btn {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line-soft);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .quote-asset-btn.active {
+      border-color: var(--gold);
+      color: var(--gold-bright);
+      background: rgba(245, 185, 66, 0.15);
+    }
+
+    .lock-box {
+      background: rgba(12, 10, 15, 0.84);
+      border: 1px solid rgba(245, 185, 66, 0.26);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .lock-switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      margin-bottom: 10px;
+    }
+
+    .lock-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .lock-chip {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line-soft);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .lock-chip.active {
+      border-color: var(--gold);
+      color: var(--gold-bright);
+      background: rgba(245, 185, 66, 0.16);
+    }
+
+    .lock-days-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lock-days-input {
+      flex: 1;
+      background: rgba(9, 8, 12, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: var(--gold-bright);
+      font-size: 16px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .lock-unit {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .locked-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .locked-item {
+      background: rgba(12, 10, 15, 0.86);
+      border: 1px solid var(--line-soft);
+      border-radius: 13px;
+      padding: 12px 14px;
+      font-size: 12px;
+    }
+
+    .locked-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .lock-badge {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(245, 185, 66, 0.16);
+      border: 1px solid rgba(245, 185, 66, 0.35);
+      color: var(--gold-bright);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .locked-item-meta {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      max-width: 980px;
+      margin: 12px auto 0;
+    }
+
+    .sub-card {
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .sub-card h3 {
+      font-size: 16px;
+      color: var(--gold-bright);
+      margin-bottom: 10px;
+    }
+
+    .sub-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    .ref-input {
+      width: 100%;
+      background: rgba(12, 10, 15, 0.88);
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 16px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    .ref-input:focus {
+      border-color: var(--gold);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, #15111b 0%, #09070a 100%);
+      backdrop-filter: blur(20px);
+      border-top: 1.5px solid var(--gold);
+      box-shadow:
+        0 -12px 36px rgba(245, 185, 66, 0.22),
+        inset 0 1px 0 rgba(255, 224, 138, 0.08);
+    }
+
+    .bottom-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 14px;
+      padding: 10px 4px;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bottom-nav-icon {
+      font-size: 18px;
+      transition: transform 0.2s ease;
+    }
+
+    .bottom-nav-btn span:last-child {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .bottom-nav-btn.active {
+      color: #1a1002;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      border-color: var(--gold-bright);
+      box-shadow:
+        0 4px 14px rgba(245, 185, 66, 0.5),
+        0 0 6px rgba(255, 224, 138, 0.4) inset;
+    }
+
+    .bottom-nav-btn.active .bottom-nav-icon {
+      transform: scale(1.18);
+    }
+
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      place-items: center;
+      padding: 20px;
+    }
+
+    .popup-overlay.show {
+      display: grid;
+    }
+
+    .popup-box {
+      width: 100%;
+      max-width: 380px;
+      background: #141118;
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.85),
+        0 0 40px rgba(245, 185, 66, 0.15);
+      transform: scale(0.9);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .popup-overlay.show .popup-box {
+      transform: scale(1);
+    }
+
+    .popup-icon-wrapper {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+      font-size: 32px;
+    }
+
+    .popup-icon-wrapper.success {
+      background: rgba(46, 204, 113, 0.15);
+      border: 2px solid var(--success);
+      color: var(--success);
+      box-shadow: 0 0 20px rgba(46, 204, 113, 0.25);
+    }
+
+    .popup-icon-wrapper.danger {
+      background: rgba(255, 74, 74, 0.15);
+      border: 2px solid var(--danger);
+      color: var(--danger);
+      box-shadow: 0 0 20px rgba(255, 74, 74, 0.25);
+    }
+
+    .popup-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .popup-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      white-space: pre-line;
+      word-break: break-all;
+    }
+
+    .popup-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      color: #151008;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .empty-locked-record {
+      text-align: center;
+      padding: 32px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      border: 1px dashed rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .pool-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding: 10px 12px;
+      }
+      .brand {
+        gap: 6px;
+      }
+      .brand-icon {
+        width: 24px;
+        height: 24px;
+      }
+      .brand-title {
+        font-size: 16px;
+      }
+      .wallet-btn {
+        padding: 8px 11px;
+        font-size: 12px;
+      }
+      .disconnect-btn {
+        padding: 7px 8px;
+        font-size: 11px;
+      }
+      .stage {
+        padding: 14px 12px calc(92px + env(safe-area-inset-bottom));
+      }
+      .hero-ram-bg {
+        width: 92vw;
+        height: 54vh;
+        right: -12%;
+        bottom: 54px;
+        opacity: 0.24;
+      }
+      .swap-shell,
+      .pool-card,
+      .sub-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+      .token-picker-btn {
+        max-width: 134px;
+        font-size: 12px;
+        padding: 8px 9px;
+      }
+      .amt-input {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-ram-bg" aria-hidden="true">
+    <img src="./5c640ca053da1743c54ad2145353883b.jpg" alt="" />
+  </div>
+
+  <header class="topbar">
+    <div class="brand" id="goHomeBrand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+          <defs>
+            <linearGradient id="goldHornGrad" x1="4" y1="4" x2="28" y2="26" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FFF0B8" />
+              <stop offset="55%" stop-color="#F5B942" />
+              <stop offset="100%" stop-color="#B97310" />
+            </linearGradient>
+          </defs>
+          <path d="M11.2 12.2C6.8 12.2 3.4 9.5 3.8 6.4C4.2 3.8 7.2 3.2 9.4 4.8C11.1 6.1 11.6 8.3 10.6 10.2" stroke="url(#goldHornGrad)" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M20.8 12.2C25.2 12.2 28.6 9.5 28.2 6.4C27.8 3.8 24.8 3.2 22.6 4.8C20.9 6.1 20.4 8.3 21.4 10.2" stroke="url(#goldHornGrad)" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M10.4 10.4H21.6L20.1 18.4L16 26.5L11.9 18.4L10.4 10.4Z" fill="url(#goldHornGrad)" />
+          <path d="M12.4 14.2L14.4 15.3L12.7 16.4" stroke="#1E1305" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19.6 14.2L17.6 15.3L19.3 16.4" stroke="#1E1305" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14.5 20.8H17.5M16 20.8V23.4" stroke="#1E1305" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="brand-title">GOLDSHEEP</div>
+    </div>
+
+    <div class="wallet-area">
+      <button type="button" class="wallet-btn" id="connectWalletBtn">连接钱包</button>
+      <button type="button" class="disconnect-btn" id="disconnectWalletBtn" style="display:none;">断开</button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="content-layer">
+      <section class="view-section active" id="view-swap">
+        <div class="swap-shell">
+          <div class="swap-head">
+            <h1 class="swap-title">兑换 (Swap)</h1>
+            <div class="tool-icons">
+              <button type="button" class="icon-btn" id="toggleSlipBtn" title="滑点设置">⚙</button>
+              <button type="button" class="icon-btn" id="resetSwapBtn" title="重置金额">↺</button>
+            </div>
+          </div>
+
+          <div class="token-box" id="fromTokenBox">
+            <div class="box-top">
+              <span>From</span>
+              <span id="fromBalText">余额: --</span>
+            </div>
+            <div class="box-main">
+              <button type="button" class="token-picker-btn" id="fromPickerBtn">
+                <span id="fromPickerLabel">BNB</span>
+                <span>▾</span>
+              </button>
+              <input class="amt-input" id="fromAmount" type="number" min="0" step="any" placeholder="0" value="" />
+              <button type="button" class="max-chip" id="maxAmountBtn">MAX</button>
+            </div>
+
+            <div class="picker-popover" id="fromPopover">
+              <div class="picker-search-row">
+                <input class="picker-search-input" id="fromSearchInput" type="text" placeholder="搜索币种或粘贴 0x... 合约" />
+                <button type="button" class="picker-add-btn" id="fromSearchConfirm">选中</button>
+              </div>
+              <div class="picker-list" id="fromPickerList"></div>
+            </div>
+          </div>
+
+          <div class="flip-wrap">
+            <button type="button" class="flip-btn" id="flipTokensBtn" title="切换兑换方向">⇅</button>
+          </div>
+
+          <div class="token-box" id="toTokenBox">
+            <div class="box-top">
+              <span>To</span>
+              <span id="toBalText">预估实时报价</span>
+            </div>
+            <div class="box-main">
+              <button type="button" class="token-picker-btn" id="toPickerBtn">
+                <span id="toPickerLabel">USDT</span>
+                <span>▾</span>
+              </button>
+              <input class="amt-input" id="toAmount" type="text" readonly value="0" />
+            </div>
+
+            <div class="picker-popover" id="toPopover">
+              <div class="picker-search-row">
+                <input class="picker-search-input" id="toSearchInput" type="text" placeholder="搜索币种或粘贴 0x... 合约" />
+                <button type="button" class="picker-add-btn" id="toSearchConfirm">选中</button>
+              </div>
+              <div class="picker-list" id="toPickerList"></div>
+            </div>
+          </div>
+
+          <div class="slippage-bar" id="slippageBar">
+            <span>滑点容差</span>
+            <div class="slip-controls" id="slipOpts">
+              <button type="button" class="slip-chip" data-slip="1">1%</button>
+              <button type="button" class="slip-chip" data-slip="3">3%</button>
+              <button type="button" class="slip-chip active" data-slip="5">5%</button>
+              <button type="button" class="slip-chip" data-slip="12.6">12.6%</button>
+              <label class="custom-slip-wrap" title="输入自定义滑点数值">
+                <input
+                  class="custom-slip-input"
+                  id="customSlipInput"
+                  type="number"
+                  min="0"
+                  max="99"
+                  step="any"
+                  placeholder="自定义"
+                />
+                <span>%</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="button" class="swap-cta" id="swapActionBtn">立即兑换 (Swap Now)</button>
+
+          <div class="meta-table">
+            <div class="meta-row">
+              <span>滑点容差</span>
+              <span class="meta-val gold" id="metaSlip">5%</span>
+            </div>
+            <div class="meta-row">
+              <span>预估手续费</span>
+              <span class="meta-val" id="metaFee">0.0000 BNB</span>
+            </div>
+            <div class="meta-row">
+              <span>1 级推荐人状态</span>
+              <span class="meta-val gold" id="metaRefStatus">未绑定</span>
+            </div>
+            <div class="meta-row">
+              <span>路由路径</span>
+              <span class="meta-val" id="metaRoute">BNB → USDT</span>
+            </div>
+          </div>
+
+          <div class="notice-box" id="swapStatus">
+            推广机制：设立 1 级直推模式，不设多级分销。关系锁定：下级通过邀请链接进入并在兑换成交后，正式锁定 1 级归属。收益发放：协议手续费池按 30% 比例直接拨付给 1 级推荐人。
+          </div>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-pool">
+        <div class="pool-layout">
+          <div class="pool-card">
+            <div class="pool-card-title">
+              <span>添加流动性 & 锁仓设置</span>
+              <span style="font-size:12px;color:var(--muted);">1 天起步 · 最长 365 天</span>
+            </div>
+
+            <div class="pool-field">
+              <label class="pool-label">搜索代币符号或粘贴 0x... 合约地址</label>
+              <div class="search-inline">
+                <input
+                  class="pool-input"
+                  id="poolContractInput"
+                  type="text"
+                  value=""
+                  placeholder="输入代币符号或 0x... 合约地址"
+                />
+                <button type="button" class="action-sub-btn" id="checkTokenHoldBtn">检测持仓</button>
+              </div>
+              <div class="hold-status-pill unheld" id="holdCheckStatus">
+                请先连接钱包或输入合约地址检测
+              </div>
+            </div>
+
+            <div class="pool-field">
+              <label class="pool-label">选择配对币种（BNB 或 USDT）</label>
+              <div class="quote-asset-group" id="quoteAssetGroup">
+                <button type="button" class="quote-asset-btn active" data-quote="BNB">BNB</button>
+                <button type="button" class="quote-asset-btn" data-quote="USDT">USDT</button>
+              </div>
+            </div>
+
+            <div class="pool-field">
+              <label class="pool-label" id="poolTargetAmtLabel">投入代币数量</label>
+              <input class="pool-input" id="poolTargetAmt" type="number" min="0" step="any" value="" placeholder="0.0" />
+            </div>
+
+            <div class="pool-field">
+              <label class="pool-label" id="poolQuoteAmtLabel">配对投入数量（BNB）</label>
+              <input class="pool-input" id="poolQuoteAmt" type="text" readonly value="0" />
+            </div>
+
+            <div class="lock-box">
+              <div class="lock-switch-row">
+                <label for="enableLpLock" style="margin:0;color:var(--gold-bright);font-size:13px;font-weight:700;cursor:pointer;">
+                  选择锁定时间
+                </label>
+                <input id="enableLpLock" type="checkbox" checked style="width:18px;height:18px;accent-color:var(--gold);cursor:pointer;" />
+              </div>
+
+              <div class="lock-presets" id="lockPresets">
+                <button type="button" class="lock-chip" data-days="1">1 天</button>
+                <button type="button" class="lock-chip" data-days="7">7 天</button>
+                <button type="button" class="lock-chip active" data-days="30">30 天</button>
+                <button type="button" class="lock-chip" data-days="180">180 天</button>
+                <button type="button" class="lock-chip" data-days="365">365 天（1年）</button>
+              </div>
+
+              <div class="lock-days-row">
+                <input
+                  class="lock-days-input"
+                  id="lockDaysInput"
+                  type="number"
+                  min="1"
+                  max="365"
+                  step="1"
+                  value="30"
+                />
+                <span class="lock-unit">天（1 ~ 365 天）</span>
+              </div>
+            </div>
+
+            <div class="meta-table" style="margin-top:0;margin-bottom:14px;border-top:none;padding-top:0;">
+              <div class="meta-row">
+                <span>预估获得 LP</span>
+                <span class="meta-val gold" id="estLpTokens">0 LP</span>
+              </div>
+              <div class="meta-row">
+                <span>锁仓周期</span>
+                <span class="meta-val gold" id="lockSummaryText">锁定 30 天</span>
+              </div>
+              <div class="meta-row">
+                <span>预计解锁日期</span>
+                <span class="meta-val" id="unlockDateText">--</span>
+              </div>
+            </div>
+
+            <button type="button" class="swap-cta" id="addLiquidityBtn">添加并锁定流动性（30 天）</button>
+            <div class="notice-box" id="poolStatus">就绪：输入代币合约并确认持仓后选择 BNB 或 USDT 添加流动性。</div>
+          </div>
+
+          <div class="pool-card">
+            <div class="pool-card-title">
+              <span>我的已锁仓流动性</span>
+              <span style="font-size:12px;color:var(--gold);" id="lockCountBadge">0 笔记录</span>
+            </div>
+            <div class="locked-list" id="lockedLiquidityList">
+              <div class="empty-locked-record" id="emptyLockAlert">暂无已锁仓流动性记录，请在左侧添加。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-community">
+        <div class="card-grid">
+          <div class="sub-card">
+            <h3>金羊社区中心</h3>
+            <p>聚合社群活动、线下见面会与生态动态入口，便于地推人员快速拉群与引导新用户加入。</p>
+            <div class="notice-box">推广机制：设立 1 级直推模式，不设多级分销。关系锁定：下级通过邀请链接进入并在兑换成交后，正式锁定 1 级归属。收益发放：协议手续费池按 30% 比例直接拨付给 1 级推荐人。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-promo">
+        <div class="card-grid">
+          <div class="sub-card">
+            <h3>地推节点邀请链接</h3>
+            <p>输入节点编号或邀请人标识，一键复制带邀请链接（下级通过链接进入 Swap 兑换成交后锁定 1 级关系）。</p>
+            <input class="ref-input" id="promoCodeInput" type="text" placeholder="输入节点编号或邀请人标识，例如：NODE-2027-01" value="GOLDSHEEP-2027" />
+            <button type="button" class="wallet-btn" id="copyPromoBtn" style="width: 100%;">生成并复制邀请链接</button>
+            <div class="notice-box" id="promoStatus">邀请链接已就绪</div>
+          </div>
+          <div class="sub-card">
+            <h3>1 级直推与手续费池拨款说明</h3>
+            <p>
+              <strong>推广机制：</strong>设立 1 级直推模式，不设多级分销。<br />
+              <strong>关系锁定：</strong>下级通过邀请链接进入并在兑换成交后，正式锁定 1 级归属。<br />
+              <strong>收益发放：</strong>协议手续费池按 30% 比例直接拨付给 1 级推荐人。
+            </p>
+            <div class="notice-box" id="refRuntimeInfo">当前暂存推荐人：无｜已锁定 1 级推荐人：无</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" id="bottomNav" aria-label="底部固定导航">
+    <button type="button" class="bottom-nav-btn active" data-view="swap">
+      <span class="bottom-nav-icon">⇋</span>
+      <span>兑换 (Swap)</span>
+    </button>
+    <button type="button" class="bottom-nav-btn" data-view="pool">
+      <span class="bottom-nav-icon">🔒</span>
+      <span>流动性 (Pool)</span>
+    </button>
+    <button type="button" class="bottom-nav-btn" data-view="community">
+      <span class="bottom-nav-icon">👥</span>
+      <span>社区</span>
+    </button>
+    <button type="button" class="bottom-nav-btn" data-view="promo">
+      <span class="bottom-nav-icon">📣</span>
+      <span>地推节点</span>
+    </button>
+  </nav>
+
+  <div class="popup-overlay" id="hudPopupOverlay" aria-modal="true" role="dialog">
+    <div class="popup-box">
+      <div class="popup-icon-wrapper" id="hudIconWrapper">✓</div>
+      <h2 class="popup-title" id="hudTitle">操作成功</h2>
+      <p class="popup-desc" id="hudDesc">您的交易已被链上确认。</p>
+      <button type="button" class="popup-btn" id="hudConfirmBtn">我知道了</button>
+    </div>
+  </div>
+
+  <script>
+    const BSC_CHAIN_ID_HEX = "0x38";
+    const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+    const PANCAKE_ROUTER_V2 = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
+
+    const navButtons = document.querySelectorAll("#bottomNav .bottom-nav-btn");
+    const viewSections = document.querySelectorAll(".view-section");
+    const connectWalletBtn = document.getElementById("connectWalletBtn");
+    const disconnectWalletBtn = document.getElementById("disconnectWalletBtn");
+
+    const fromPickerBtn = document.getElementById("fromPickerBtn");
+    const toPickerBtn = document.getElementById("toPickerBtn");
+    const fromPickerLabel = document.getElementById("fromPickerLabel");
+    const toPickerLabel = document.getElementById("toPickerLabel");
+    const fromPopover = document.getElementById("fromPopover");
+    const toPopover = document.getElementById("toPopover");
+    const fromSearchInput = document.getElementById("fromSearchInput");
+    const toSearchInput = document.getElementById("toSearchInput");
+    const fromSearchConfirm = document.getElementById("fromSearchConfirm");
+    const toSearchConfirm = document.getElementById("toSearchConfirm");
+    const fromPickerList = document.getElementById("fromPickerList");
+    const toPickerList = document.getElementById("toPickerList");
+
+    const fromAmount = document.getElementById("fromAmount");
+    const toAmount = document.getElementById("toAmount");
+    const maxAmountBtn = document.getElementById("maxAmountBtn");
+    const flipTokensBtn = document.getElementById("flipTokensBtn");
+    const toggleSlipBtn = document.getElementById("toggleSlipBtn");
+    const resetSwapBtn = document.getElementById("resetSwapBtn");
+    const slippageBar = document.getElementById("slippageBar");
+    const slipChips = document.querySelectorAll("#slipOpts .slip-chip");
+    const customSlipInput = document.getElementById("customSlipInput");
+    const swapActionBtn = document.getElementById("swapActionBtn");
+    const metaSlip = document.getElementById("metaSlip");
+    const metaFee = document.getElementById("metaFee");
+    const metaRefStatus = document.getElementById("metaRefStatus");
+    const metaRoute = document.getElementById("metaRoute");
+    const fromBalText = document.getElementById("fromBalText");
+    const swapStatus = document.getElementById("swapStatus");
+
+    const promoCodeInput = document.getElementById("promoCodeInput");
+    const copyPromoBtn = document.getElementById("copyPromoBtn");
+    const promoStatus = document.getElementById("promoStatus");
+    const refRuntimeInfo = document.getElementById("refRuntimeInfo");
+
+    const hudOverlay = document.getElementById("hudPopupOverlay");
+    const hudIconWrapper = document.getElementById("hudIconWrapper");
+    const hudTitle = document.getElementById("hudTitle");
+    const hudDesc = document.getElementById("hudDesc");
+    const hudConfirmBtn = document.getElementById("hudConfirmBtn");
+
+    const REFERRER_SHARE_RATIO = 0.3;
+
+    let slippagePct = 5;
+    let walletConnected = false;
+    let walletAddress = "";
+    let balanceSyncSeq = 0;
+    let selectedFromSym = "BNB";
+    let selectedToSym = "USDT";
+    let rawExpectedOut = 0n;
+    let activeRoutePath = [];
+    let quoteTimer = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const incomingRef = (urlParams.get("ref") || "").trim();
+    let pendingReferrer = incomingRef || "";
+    let lockedReferrer = localStorage.getItem("goldsheep_locked_ref_v1") || "";
+
+    const tokenList = [
+      { symbol: "BNB", label: "BNB", address: "native", decimals: 18, priceUsd: 550, balance: 0, balanceText: "0", isNative: true },
+      { symbol: "USDT", label: "USDT", address: "0x55d398326f99059fF775485246999027B3197955", decimals: 18, priceUsd: 1, balance: 0, balanceText: "0", isNative: false },
+      { symbol: "ETH", label: "ETH (BSC)", address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", decimals: 18, priceUsd: 3200, balance: 0, balanceText: "0", isNative: false },
+      { symbol: "CAKE", label: "CAKE", address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", decimals: 18, priceUsd: 2.4, balance: 0, balanceText: "0", isNative: false }
+    ];
+
+    function showHUD(type, title, text) {
+      hudIconWrapper.className = `popup-icon-wrapper ${type}`;
+      hudIconWrapper.innerHTML = type === "success" ? "✓" : "×";
+      hudTitle.textContent = title;
+      hudDesc.textContent = text;
+      hudOverlay.classList.add("show");
+    }
+
+    hudConfirmBtn.addEventListener("click", () => {
+      hudOverlay.classList.remove("show");
+    });
+
+    hudOverlay.addEventListener("click", (e) => {
+      if (e.target === hudOverlay) {
+        hudOverlay.classList.remove("show");
+      }
+    });
+
+    function resetMobileScaleAfterInput(inputEl) {
+      if (inputEl && typeof inputEl.blur === "function") {
+        inputEl.blur();
+      }
+      setTimeout(() => {
+        try {
+          window.scrollTo({ top: window.scrollY, left: 0, behavior: "instant" });
+        } catch (_) {
+          window.scrollTo(0, window.scrollY);
+        }
+      }, 60);
+    }
+
+    function syncReferralDisplay() {
+      if (lockedReferrer) {
+        metaRefStatus.textContent = `已锁定 1 级：${lockedReferrer}`;
+      } else if (pendingReferrer) {
+        metaRefStatus.textContent = `待成交锁定：${pendingReferrer}`;
+      } else {
+        metaRefStatus.textContent = "未绑定";
+      }
+      refRuntimeInfo.textContent = `当前暂存推荐人：${pendingReferrer || "无"}｜已锁定 1 级推荐人：${lockedReferrer || "无"}`;
+    }
+
+    function buildInviteLink(code) {
+      const cleanCode = encodeURIComponent((code || "GOLDSHEEP-2027").trim());
+      const base = window.location.href.split("?")[0];
+      return `${base}?ref=${cleanCode}`;
+    }
+
+    function refreshPromoLinkBox() {
+      const link = buildInviteLink(promoCodeInput.value);
+      promoStatus.textContent = `邀请链接：${link}`;
+    }
+
+    copyPromoBtn.addEventListener("click", async () => {
+      const link = buildInviteLink(promoCodeInput.value);
+      promoStatus.textContent = `邀请链接：${link}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(link);
+          showHUD("success", "复制成功", "邀请链接已复制到剪贴板。");
+        } catch (_) {
+          showHUD("success", "已生成邀请链接", "链接已生成，可复制下方地址分享。");
+        }
+      } else {
+        showHUD("success", "已生成邀请链接", "链接已生成，可复制下方地址分享。");
+      }
+      resetMobileScaleAfterInput(promoCodeInput);
+    });
+
+    promoCodeInput.addEventListener("input", refreshPromoLinkBox);
+    promoCodeInput.addEventListener("paste", () => {
+      setTimeout(() => {
+        refreshPromoLinkBox();
+        resetMobileScaleAfterInput(promoCodeInput);
+      }, 50);
+    });
+
+    function getTokenBySymbol(sym) {
+      return tokenList.find(t => t.symbol.toUpperCase() === String(sym).toUpperCase()) || tokenList[0];
+    }
+
+    function parseUnits(amountStr, decimals) {
+      const clean = String(amountStr || "").trim();
+      if (!clean || Number.isNaN(Number(clean)) || Number(clean) <= 0) return 0n;
+      const safeDec = Math.max(0, Math.min(36, Number(decimals) || 18));
+      const parts = clean.split(".");
+      const intPart = parts[0] || "0";
+      const fracPart = (parts[1] || "").slice(0, safeDec).padEnd(safeDec, "0");
+      return BigInt(intPart + fracPart);
+    }
+
+    function formatUnitsExact(rawBigInt, decimals, maxFraction = 6) {
+      if (typeof rawBigInt !== "bigint" || rawBigInt <= 0n) return "0";
+      const safeDec = Math.max(0, Math.min(36, Number(decimals) || 18));
+      if (safeDec === 0) return rawBigInt.toString();
+      const divisor = 10n ** BigInt(safeDec);
+      const intPart = rawBigInt / divisor;
+      const remPart = (rawBigInt % divisor).toString().padStart(safeDec, "0");
+      const trimmedFrac = remPart.slice(0, maxFraction).replace(/0+$/, "");
+      return trimmedFrac ? `${intPart.toString()}.${trimmedFrac}` : intPart.toString();
+    }
+
+    function decimalStrToNumber(decStr) {
+      const n = Number(decStr);
+      return Number.isFinite(n) && n >= 0 ? n : 0;
+    }
+
+    async function ensureBscChain() {
+      if (!window.ethereum) return false;
+      try {
+        const currentChain = await window.ethereum.request({ method: "eth_chainId" });
+        if (String(currentChain).toLowerCase() === BSC_CHAIN_ID_HEX) {
+          return true;
+        }
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: BSC_CHAIN_ID_HEX }]
+        });
+        return true;
+      } catch (switchErr) {
+        if (switchErr && switchErr.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: BSC_CHAIN_ID_HEX,
+                chainName: "BNB Smart Chain",
+                nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+                rpcUrls: ["https://bsc-dataseed.binance.org/"],
+                blockExplorerUrls: ["https://bscscan.com/"]
+              }]
+            });
+            return true;
+          } catch (_) {
+            return false;
+          }
+        }
+        return false;
+      }
+    }
+
+    async function fetchRealNativeBalance(address) {
+      if (!window.ethereum || !address) return { num: 0, text: "0" };
+      try {
+        const weiHex = await window.ethereum.request({
+          method: "eth_getBalance",
+          params: [address, "latest"]
+        });
+        if (!weiHex || weiHex === "0x") return { num: 0, text: "0" };
+        const weiBig = BigInt(weiHex);
+        const text = formatUnitsExact(weiBig, 18, 6);
+        return { num: decimalStrToNumber(text), text };
+      } catch (_) {
+        return { num: 0, text: "0" };
+      }
+    }
+
+    async function fetchErc20Decimals(contractAddr) {
+      if (!window.ethereum || !contractAddr) return 18;
+      try {
+        const hex = await window.ethereum.request({
+          method: "eth_call",
+          params: [{ to: contractAddr, data: "0x313ce567" }, "latest"]
+        });
+        if (!hex || hex === "0x" || hex.length < 66) return 18;
+        const dec = Number(BigInt("0x" + hex.slice(-64)));
+        return dec >= 0 && dec <= 36 ? dec : 18;
+      } catch (_) {
+        return 18;
+      }
+    }
+
+    async function readErc20Balance(contractAddr, ownerAddr, decimals = 18) {
+      if (!window.ethereum || !contractAddr || !ownerAddr) return { num: 0, text: "0" };
+      const cleanAddr = ownerAddr.replace(/^0x/i, "").toLowerCase().padStart(64, "0");
+      const data = "0x70a08231" + cleanAddr;
+      try {
+        const hex = await window.ethereum.request({
+          method: "eth_call",
+          params: [{ to: contractAddr, data }, "latest"]
+        });
+        if (!hex || hex === "0x" || hex.length < 66) return { num: 0, text: "0" };
+        const raw = BigInt("0x" + hex.slice(-64));
+        const text = formatUnitsExact(raw, decimals, 6);
+        return { num: decimalStrToNumber(text), text };
+      } catch (_) {
+        return { num: 0, text: "0" };
+      }
+    }
+
+    async function refreshAllWalletBalances() {
+      const mySeq = ++balanceSyncSeq;
+      if (!walletConnected || !walletAddress) {
+        tokenList.forEach(t => {
+          t.balance = 0;
+          t.balanceText = "0";
+        });
+        return;
+      }
+
+      const results = [];
+      for (const t of tokenList) {
+        if (t.isNative) {
+          const b = await fetchRealNativeBalance(walletAddress);
+          results.push({ token: t, decimals: 18, bal: b });
+        } else {
+          const dec = await fetchErc20Decimals(t.address);
+          const b = await readErc20Balance(t.address, walletAddress, dec);
+          results.push({ token: t, decimals: dec, bal: b });
+        }
+      }
+
+      if (mySeq !== balanceSyncSeq) return;
+      results.forEach(({ token, decimals, bal }) => {
+        token.decimals = decimals;
+        token.balance = bal.num;
+        token.balanceText = bal.text;
+      });
+    }
+
+    function syncPickerLabels() {
+      const fInfo = getTokenBySymbol(selectedFromSym);
+      const tInfo = getTokenBySymbol(selectedToSym);
+      fromPickerLabel.textContent = fInfo.symbol;
+      toPickerLabel.textContent = tInfo.symbol;
+    }
+
+    function renderListForSide(side, filterText = "") {
+      const q = filterText.trim().toLowerCase();
+      const targetListEl = side === "from" ? fromPickerList : toPickerList;
+      targetListEl.innerHTML = "";
+
+      const filtered = tokenList.filter(t =>
+        !q ||
+        t.symbol.toLowerCase().includes(q) ||
+        t.label.toLowerCase().includes(q) ||
+        t.address.toLowerCase().includes(q)
+      );
+
+      if (filtered.length === 0) {
+        const emptyRow = document.createElement("div");
+        emptyRow.className = "picker-item-sub";
+        emptyRow.style.padding = "8px 10px";
+        emptyRow.textContent = "未搜到币种，若为新币请粘贴 0x... 合约后点“选中”。";
+        targetListEl.appendChild(emptyRow);
+        return;
+      }
+
+      filtered.forEach(t => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "picker-item";
+        btn.innerHTML = `
+          <span><strong>${t.symbol}</strong></span>
+          <span class="picker-item-sub">${t.address === "native" ? "BSC Native" : t.address.slice(0, 6) + "..." + t.address.slice(-4)}</span>
+        `;
+        btn.addEventListener("click", async () => {
+          applyTokenSelection(side, t.symbol);
+          if (walletConnected && walletAddress && !t.isNative) {
+            const dec = await fetchErc20Decimals(t.address);
+            const b = await readErc20Balance(t.address, walletAddress, dec);
+            t.decimals = dec;
+            t.balance = b.num;
+            t.balanceText = b.text;
+            updateQuote();
+          }
+          closeAllPopovers();
+          resetMobileScaleAfterInput(side === "from" ? fromSearchInput : toSearchInput);
+        });
+        targetListEl.appendChild(btn);
+      });
+    }
+
+    function applyTokenSelection(side, sym) {
+      if (side === "from") {
+        selectedFromSym = sym;
+        if (selectedToSym === selectedFromSym) {
+          const other = tokenList.find(t => t.symbol !== selectedFromSym);
+          if (other) selectedToSym = other.symbol;
+        }
+      } else {
+        selectedToSym = sym;
+        if (selectedFromSym === selectedToSym) {
+          const other = tokenList.find(t => t.symbol !== selectedToSym);
+          if (other) selectedFromSym = other.symbol;
+        }
+      }
+      syncPickerLabels();
+      updateQuote();
+    }
+
+    function handleSearchConfirm(side) {
+      const inputEl = side === "from" ? fromSearchInput : toSearchInput;
+      const raw = (inputEl.value || "").trim();
+      if (!raw) {
+        swapStatus.textContent = "请输入代币符号或粘贴 0x 合约地址。";
+        return;
+      }
+
+      const lower = raw.toLowerCase();
+      let found = tokenList.find(
+        t => t.symbol.toLowerCase() === lower ||
+             t.label.toLowerCase().includes(lower) ||
+             t.address.toLowerCase() === lower
+      );
+
+      if (!found && /^0x[a-fA-F0-9]{40}$/.test(raw)) {
+        const sym = "TOK" + raw.slice(-4).toUpperCase();
+        found = {
+          symbol: sym,
+          label: sym,
+          address: raw,
+          decimals: 18,
+          priceUsd: 0.05,
+          balance: 0,
+          balanceText: "0",
+          isNative: false
+        };
+        tokenList.push(found);
+        swapStatus.textContent = `已添加并选中代币 ${found.symbol}（${raw}）。`;
+      } else if (found) {
+        swapStatus.textContent = `已选中 ${found.symbol}。`;
+      } else {
+        swapStatus.textContent = `未找到“${raw}”，请粘贴完整 42 位 0x 合约地址进行添加。`;
+        return;
+      }
+
+      inputEl.value = "";
+      applyTokenSelection(side, found.symbol);
+      if (walletConnected && walletAddress && !found.isNative) {
+        fetchErc20Decimals(found.address).then(async dec => {
+          const b = await readErc20Balance(found.address, walletAddress, dec);
+          found.decimals = dec;
+          found.balance = b.num;
+          found.balanceText = b.text;
+          updateQuote();
+        });
+      }
+      closeAllPopovers();
+      resetMobileScaleAfterInput(inputEl);
+    }
+
+    function closeAllPopovers() {
+      fromPopover.classList.remove("open");
+      toPopover.classList.remove("open");
+    }
+
+    fromPickerBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const willOpen = !fromPopover.classList.contains("open");
+      closeAllPopovers();
+      if (willOpen) {
+        renderListForSide("from", fromSearchInput.value);
+        fromPopover.classList.add("open");
+      }
+    });
+
+    toPickerBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const willOpen = !toPopover.classList.contains("open");
+      closeAllPopovers();
+      if (willOpen) {
+        renderListForSide("to", toSearchInput.value);
+        toPopover.classList.add("open");
+      }
+    });
+
+    fromPopover.addEventListener("click", (e) => e.stopPropagation());
+    toPopover.addEventListener("click", (e) => e.stopPropagation());
+    document.addEventListener("click", closeAllPopovers);
+
+    fromSearchInput.addEventListener("input", () => renderListForSide("from", fromSearchInput.value));
+    toSearchInput.addEventListener("input", () => renderListForSide("to", toSearchInput.value));
+
+    fromSearchInput.addEventListener("paste", () => {
+      setTimeout(() => {
+        renderListForSide("from", fromSearchInput.value);
+        resetMobileScaleAfterInput(fromSearchInput);
+      }, 60);
+    });
+
+    toSearchInput.addEventListener("paste", () => {
+      setTimeout(() => {
+        renderListForSide("to", toSearchInput.value);
+        resetMobileScaleAfterInput(toSearchInput);
+      }, 60);
+    });
+
+    fromSearchConfirm.addEventListener("click", () => handleSearchConfirm("from"));
+    toSearchConfirm.addEventListener("click", () => handleSearchConfirm("to"));
+
+    fromSearchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSearchConfirm("from");
+      }
+    });
+
+    toSearchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSearchConfirm("to");
+      }
+    });
+
+    function switchView(viewName) {
+      navButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.view === viewName);
+      });
+      viewSections.forEach(sec => {
+        sec.classList.toggle("active", sec.id === "view-" + viewName);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => switchView(btn.dataset.view));
+    });
+
+    document.getElementById("goHomeBrand").addEventListener("click", () => switchView("swap"));
+
+    function buildCandidatePaths(fInfo, tInfo) {
+      const addrIn = fInfo.isNative ? WBNB_ADDRESS : fInfo.address;
+      const addrOut = tInfo.isNative ? WBNB_ADDRESS : tInfo.address;
+      if (addrIn.toLowerCase() === addrOut.toLowerCase()) return [];
+      const paths = [[addrIn, addrOut]];
+      const wbnbLower = WBNB_ADDRESS.toLowerCase();
+      if (addrIn.toLowerCase() !== wbnbLower && addrOut.toLowerCase() !== wbnbLower) {
+        paths.push([addrIn, WBNB_ADDRESS, addrOut]);
+      }
+      return paths;
+    }
+
+    async function callGetAmountsOutForPath(amountInRaw, path) {
+      const amtHex = amountInRaw.toString(16).padStart(64, "0");
+      const offsetHex = (64).toString(16).padStart(64, "0");
+      const lenHex = BigInt(path.length).toString(16).padStart(64, "0");
+      const encodedPath = path.map(a => a.replace(/^0x/i, "").toLowerCase().padStart(64, "0")).join("");
+      const callData = "0xd06ca61f" + amtHex + offsetHex + lenHex + encodedPath;
+
+      const resHex = await window.ethereum.request({
+        method: "eth_call",
+        params: [{ to: PANCAKE_ROUTER_V2, data: callData }, "latest"]
+      });
+      if (!resHex || resHex === "0x" || resHex.length < 130) return null;
+      return BigInt("0x" + resHex.slice(-64));
+    }
+
+    async function quoteFromPancakeRouter(fInfo, tInfo, amountInRaw) {
+      if (!window.ethereum || amountInRaw <= 0n) return null;
+      const candidates = buildCandidatePaths(fInfo, tInfo);
+      for (const p of candidates) {
+        try {
+          const out = await callGetAmountsOutForPath(amountInRaw, p);
+          if (typeof out === "bigint" && out > 0n) {
+            return { amountOut: out, path: p };
+          }
+        } catch (_) {}
+      }
+      return null;
+    }
+
+    function updateQuote() {
+      const fInfo = getTokenBySymbol(selectedFromSym);
+      const tInfo = getTokenBySymbol(selectedToSym);
+      const amt = parseFloat(fromAmount.value) || 0;
+
+      fromBalText.textContent = walletConnected ? `余额: ${fInfo.balanceText || fInfo.balance} ${fInfo.symbol}` : "余额: --";
+      metaSlip.textContent = `${slippagePct}%`;
+      metaRoute.textContent = `${fInfo.symbol} → ${tInfo.symbol}`;
+
+      const feeVal = amt * 0.003;
+      metaFee.textContent = amt > 0 ? `${feeVal.toFixed(4)} ${fInfo.symbol}` : `0.0000 ${fInfo.symbol}`;
+
+      if (amt <= 0) {
+        rawExpectedOut = 0n;
+        activeRoutePath = [];
+        toAmount.value = "0";
+        return;
+      }
+
+      const rawIn = parseUnits(fromAmount.value, fInfo.decimals || 18);
+      if (quoteTimer) clearTimeout(quoteTimer);
+      quoteTimer = setTimeout(async () => {
+        const qRes = await quoteFromPancakeRouter(fInfo, tInfo, rawIn);
+        if (qRes && qRes.amountOut > 0n) {
+          rawExpectedOut = qRes.amountOut;
+          activeRoutePath = qRes.path;
+          toAmount.value = formatUnitsExact(qRes.amountOut, tInfo.decimals || 18, 6);
+        } else {
+          rawExpectedOut = 0n;
+          activeRoutePath = [];
+          toAmount.value = "0";
+        }
+      }, 150);
+    }
+
+    fromAmount.addEventListener("input", updateQuote);
+
+    maxAmountBtn.addEventListener("click", () => {
+      if (!walletConnected) {
+        showHUD("danger", "连接钱包", "请先连接钱包后再使用 MAX 填充余额。");
+        return;
+      }
+      const fInfo = getTokenBySymbol(selectedFromSym);
+      const maxVal = fInfo.isNative ? Math.max(0, fInfo.balance - 0.001) : fInfo.balance;
+      fromAmount.value = maxVal > 0 ? String(Number(maxVal.toFixed(6))) : "0";
+      updateQuote();
+    });
+
+    flipTokensBtn.addEventListener("click", () => {
+      const prevFrom = selectedFromSym;
+      selectedFromSym = selectedToSym;
+      selectedToSym = prevFrom;
+      syncPickerLabels();
+      updateQuote();
+    });
+
+    toggleSlipBtn.addEventListener("click", () => {
+      slippageBar.style.display = "flex";
+      customSlipInput.focus();
+    });
+
+    resetSwapBtn.addEventListener("click", () => {
+      fromAmount.value = "";
+      fromSearchInput.value = "";
+      toSearchInput.value = "";
+      rawExpectedOut = 0n;
+      activeRoutePath = [];
+      updateQuote();
+      swapStatus.textContent = "已重置兑换输入与搜索框。";
+    });
+
+    slipChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        slipChips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        customSlipInput.value = "";
+        slippagePct = parseFloat(chip.dataset.slip) || 5;
+        updateQuote();
+      });
+    });
+
+    customSlipInput.addEventListener("input", () => {
+      const rawVal = customSlipInput.value.trim();
+      if (rawVal === "") {
+        const activeChip = document.querySelector("#slipOpts .slip-chip.active");
+        slippagePct = activeChip ? parseFloat(activeChip.dataset.slip) || 5 : 5;
+        updateQuote();
+        return;
+      }
+      const parsed = parseFloat(rawVal);
+      if (!Number.isNaN(parsed) && parsed >= 0) {
+        slipChips.forEach(c => c.classList.remove("active"));
+        slippagePct = Math.min(99, parsed);
+        updateQuote();
+      }
+    });
+
+    connectWalletBtn.addEventListener("click", async () => {
+      if (!window.ethereum) {
+        showHUD("danger", "未检测到钱包", "请在钱包内置浏览器中打开本页面。");
+        return;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        walletAddress = accounts[0] || "";
+        if (!walletAddress) {
+          showHUD("danger", "连接失败", "未获取到钱包地址。");
+          return;
+        }
+        await ensureBscChain();
+        walletConnected = true;
+        connectWalletBtn.textContent = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+        disconnectWalletBtn.style.display = "inline-block";
+        await refreshAllWalletBalances();
+        swapStatus.textContent = `已连接钱包：${walletAddress}`;
+        updateQuote();
+        detectTokenHolding();
+      } catch (err) {
+        showHUD("danger", "连接取消", err.message || "钱包连接已取消。");
+      }
+    });
+
+    disconnectWalletBtn.addEventListener("click", () => {
+      balanceSyncSeq += 1;
+      walletConnected = false;
+      walletAddress = "";
+      rawExpectedOut = 0n;
+      activeRoutePath = [];
+      tokenList.forEach(t => {
+        t.balance = 0;
+        t.balanceText = "0";
+      });
+      connectWalletBtn.textContent = "连接钱包";
+      disconnectWalletBtn.style.display = "none";
+      fromAmount.value = "";
+      toAmount.value = "0";
+      swapStatus.textContent = "已断开钱包连接。";
+      updateQuote();
+      detectTokenHolding();
+    });
+
+    function settleTradeAndLockReferrer(amt, fInfo) {
+      const feePoolAmt = amt * 0.003;
+      const activeRef = lockedReferrer || pendingReferrer;
+      let lockMsg = "";
+
+      if (activeRef) {
+        if (!lockedReferrer) {
+          lockedReferrer = activeRef;
+          localStorage.setItem("goldsheep_locked_ref_v1", lockedReferrer);
+        }
+        const refReward = feePoolAmt * REFERRER_SHARE_RATIO;
+        lockMsg = `\n1 级推荐人 ${lockedReferrer} 已绑定，协议手续费池按 30% 拨付 ${refReward.toFixed(4)} ${fInfo.symbol}`;
+      }
+
+      syncReferralDisplay();
+      return lockMsg;
+    }
+
+    async function ensureTokenAllowance(tokenAddr, ownerAddr, spenderAddr, requiredAmount) {
+      const ownerWord = ownerAddr.replace(/^0x/i, "").toLowerCase().padStart(64, "0");
+      const spenderWord = spenderAddr.replace(/^0x/i, "").toLowerCase().padStart(64, "0");
+      const allowanceHex = await window.ethereum.request({
+        method: "eth_call",
+        params: [{ to: tokenAddr, data: "0xdd62ed3e" + ownerWord + spenderWord }, "latest"]
+      });
+      const currentAllowance = allowanceHex && allowanceHex !== "0x" ? BigInt(allowanceHex) : 0n;
+      if (currentAllowance >= requiredAmount) return;
+
+      const approveData = "0x095ea7b3" + spenderWord + requiredAmount.toString(16).padStart(64, "0");
+      await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [{
+          from: ownerAddr,
+          to: tokenAddr,
+          data: approveData
+        }]
+      });
+    }
+
+    function encodeSwapCalldata(fInfo, tInfo, amountInRaw, minOutRaw, toAddr, deadline, routePath) {
+      const addrIn = fInfo.isNative ? WBNB_ADDRESS : fInfo.address;
+      const addrOut = tInfo.isNative ? WBNB_ADDRESS : tInfo.address;
+      const path = Array.isArray(routePath) && routePath.length >= 2 ? routePath : [addrIn, addrOut];
+
+      const toWord = toAddr.replace(/^0x/i, "").toLowerCase().padStart(64, "0");
+      const deadlineWord = BigInt(deadline).toString(16).padStart(64, "0");
+      const lenWord = BigInt(path.length).toString(16).padStart(64, "0");
+      const encodedPath = path.map(a => a.replace(/^0x/i, "").toLowerCase().padStart(64, "0")).join("");
+
+      if (fInfo.isNative && !tInfo.isNative) {
+        const minOutWord = minOutRaw.toString(16).padStart(64, "0");
+        const pathOffsetWord = (128).toString(16).padStart(64, "0");
+        return "0x7ff36ab5" + minOutWord + pathOffsetWord + toWord + deadlineWord + lenWord + encodedPath;
+      }
+
+      if (!fInfo.isNative && tInfo.isNative) {
+        const amtInWord = amountInRaw.toString(16).padStart(64, "0");
+        const minOutWord = minOutRaw.toString(16).padStart(64, "0");
+        const pathOffsetWord = (160).toString(16).padStart(64, "0");
+        return "0x18cbafe5" + amtInWord + minOutWord + pathOffsetWord + toWord + deadlineWord + lenWord + encodedPath;
+      }
+
+      const amtInWord = amountInRaw.toString(16).padStart(64, "0");
+      const minOutWord = minOutRaw.toString(16).padStart(64, "0");
+      const pathOffsetWord = (160).toString(16).padStart(64, "0");
+      return "0x38ed1739" + amtInWord + minOutWord + pathOffsetWord + toWord + deadlineWord + lenWord + encodedPath;
+    }
+
+    swapActionBtn.addEventListener("click", async () => {
+      if (!walletConnected || !window.ethereum || !walletAddress) {
+        showHUD("danger", "未连接钱包", "请先连接钱包后再进行代币兑换。");
+        return;
+      }
+
+      const amt = parseFloat(fromAmount.value) || 0;
+      if (amt <= 0) {
+        showHUD("danger", "请输入数量", "请输入大于 0 的兑换数量。");
+        return;
+      }
+
+      const fInfo = getTokenBySymbol(selectedFromSym);
+      const tInfo = getTokenBySymbol(selectedToSym);
+
+      if (amt > fInfo.balance) {
+        showHUD("danger", "兑换失败", `当前 ${fInfo.symbol} 余额为 ${fInfo.balanceText || fInfo.balance}，余额不足。`);
+        return;
+      }
+
+      try {
+        await ensureBscChain();
+        const amountInRaw = parseUnits(fromAmount.value, fInfo.decimals || 18);
+        const qRes = await quoteFromPancakeRouter(fInfo, tInfo, amountInRaw);
+        const baseOut = qRes && qRes.amountOut > 0n ? qRes.amountOut : rawExpectedOut;
+        const routeToUse = qRes && qRes.path ? qRes.path : activeRoutePath;
+
+        if (!baseOut || baseOut <= 0n) {
+          showHUD("danger", "兑换失败", "未获取到有效流动池报价，请检查交易对或输入数量。");
+          return;
+        }
+
+        const slipBps = BigInt(Math.max(0, Math.min(9900, Math.round(slippagePct * 100))));
+        const minOutRaw = (baseOut * (10000n - slipBps)) / 10000n;
+        const deadline = Math.floor(Date.now() / 1000) + 600;
+
+        if (!fInfo.isNative) {
+          await ensureTokenAllowance(fInfo.address, walletAddress, PANCAKE_ROUTER_V2, amountInRaw);
+        }
+
+        const data = encodeSwapCalldata(fInfo, tInfo, amountInRaw, minOutRaw, walletAddress, deadline, routeToUse);
+        const txParams = {
+          from: walletAddress,
+          to: PANCAKE_ROUTER_V2,
+          data
+        };
+        if (fInfo.isNative) {
+          txParams.value = "0x" + amountInRaw.toString(16);
+        }
+
+        const txHash = await window.ethereum.request({
+          method: "eth_sendTransaction",
+          params: [txParams]
+        });
+
+        const refNote = settleTradeAndLockReferrer(amt, fInfo);
+        await refreshAllWalletBalances();
+        fromAmount.value = "";
+        rawExpectedOut = 0n;
+        activeRoutePath = [];
+        updateQuote();
+
+        showHUD(
+          "success",
+          "交易已提交",
+          `买卖方向：${fInfo.symbol} → ${tInfo.symbol}\n交易哈希：${txHash}${refNote}`
+        );
+      } catch (err) {
+        showHUD("danger", "兑换失败", err.message || "交易未确认或已取消。");
+      }
+    });
+
+    const poolContractInput = document.getElementById("poolContractInput");
+    const checkTokenHoldBtn = document.getElementById("checkTokenHoldBtn");
+    const holdCheckStatus = document.getElementById("holdCheckStatus");
+    const quoteAssetGroup = document.getElementById("quoteAssetGroup");
+    const quoteAssetBtns = quoteAssetGroup.querySelectorAll(".quote-asset-btn");
+    const poolTargetAmtLabel = document.getElementById("poolTargetAmtLabel");
+    const poolQuoteAmtLabel = document.getElementById("poolQuoteAmtLabel");
+    const poolTargetAmt = document.getElementById("poolTargetAmt");
+    const poolQuoteAmt = document.getElementById("poolQuoteAmt");
+    const enableLpLock = document.getElementById("enableLpLock");
+    const lockPresets = document.querySelectorAll("#lockPresets .lock-chip");
+    const lockDaysInput = document.getElementById("lockDaysInput");
+    const estLpTokens = document.getElementById("estLpTokens");
+    const lockSummaryText = document.getElementById("lockSummaryText");
+    const unlockDateText = document.getElementById("unlockDateText");
+    const addLiquidityBtn = document.getElementById("addLiquidityBtn");
+    const poolStatus = document.getElementById("poolStatus");
+    const lockedLiquidityList = document.getElementById("lockedLiquidityList");
+    const lockCountBadge = document.getElementById("lockCountBadge");
+    const emptyLockAlert = document.getElementById("emptyLockAlert");
+
+    let selectedQuoteAsset = "BNB";
+    let detectedToken = {
+      symbol: "代币",
+      address: "",
+      heldBalance: 0,
+      heldBalanceText: "0",
+      hasBalance: false,
+      priceUsd: 0.1
+    };
+    let lockRecordCount = 0;
+
+    async function detectTokenHolding() {
+      if (!walletConnected || !walletAddress) {
+        holdCheckStatus.textContent = "请先连接钱包或输入合约地址检测";
+        holdCheckStatus.classList.add("unheld");
+        updatePoolPreview();
+        return;
+      }
+
+      const raw = (poolContractInput.value || "").trim();
+      if (!raw) {
+        detectedToken = {
+          symbol: "未指定",
+          address: "",
+          heldBalance: 0,
+          heldBalanceText: "0",
+          hasBalance: false,
+          priceUsd: 0.05
+        };
+        holdCheckStatus.textContent = "请输入代币合约地址并点击检测";
+        holdCheckStatus.classList.add("unheld");
+        updatePoolPreview();
+        return;
+      }
+
+      const lower = raw.toLowerCase();
+      const matched = tokenList.find(
+        t => t.symbol.toLowerCase() === lower ||
+             t.label.toLowerCase().includes(lower) ||
+             t.address.toLowerCase() === lower
+      );
+
+      let balObj = { num: 0, text: "0" };
+      let addr = raw;
+      let sym = raw.toUpperCase();
+      let priceUsd = 0.05;
+
+      if (matched) {
+        sym = matched.symbol;
+        addr = matched.address;
+        priceUsd = matched.priceUsd;
+        const dec = matched.isNative ? 18 : await fetchErc20Decimals(matched.address);
+        balObj = matched.isNative
+          ? await fetchRealNativeBalance(walletAddress)
+          : await readErc20Balance(matched.address, walletAddress, dec);
+      } else if (/^0x[a-fA-F0-9]{40}$/.test(raw)) {
+        sym = "TOK" + raw.slice(-4).toUpperCase();
+        const dec = await fetchErc20Decimals(raw);
+        balObj = await readErc20Balance(raw, walletAddress, dec);
+      }
+
+      detectedToken = {
+        symbol: sym,
+        address: addr,
+        heldBalance: balObj.num,
+        heldBalanceText: balObj.text,
+        hasBalance: balObj.num > 0,
+        priceUsd
+      };
+
+      if (detectedToken.hasBalance) {
+        holdCheckStatus.textContent = `已检测到 ${detectedToken.symbol} 余额：${detectedToken.heldBalanceText}（可选择 ${selectedQuoteAsset} 添加流动性）`;
+        holdCheckStatus.classList.remove("unheld");
+      } else {
+        holdCheckStatus.textContent = `当前钱包未检测到 ${detectedToken.symbol} 余额`;
+        holdCheckStatus.classList.add("unheld");
+      }
+
+      updatePoolPreview();
+    }
+
+    function normalizeLockDays() {
+      let days = parseInt(lockDaysInput.value, 10);
+      if (Number.isNaN(days) || days < 1) days = 1;
+      if (days > 365) days = 365;
+      return days;
+    }
+
+    function formatUnlockDate(days) {
+      const target = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+      const y = target.getFullYear();
+      const m = String(target.getMonth() + 1).padStart(2, "0");
+      const d = String(target.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function syncPresetActive(days) {
+      lockPresets.forEach(chip => {
+        chip.classList.toggle("active", parseInt(chip.dataset.days, 10) === days);
+      });
+    }
+
+    function updatePoolPreview() {
+      const targetAmt = Math.max(0, parseFloat(poolTargetAmt.value) || 0);
+      const quotePriceUsd = selectedQuoteAsset === "BNB" ? 550 : 1;
+      const quoteAmt = (targetAmt * detectedToken.priceUsd) / quotePriceUsd;
+
+      poolTargetAmtLabel.textContent = `投入代币数量（${detectedToken.symbol || "代币"}）`;
+      poolQuoteAmtLabel.textContent = `配对投入数量（${selectedQuoteAsset}）`;
+      poolQuoteAmt.value = targetAmt > 0
+        ? (selectedQuoteAsset === "BNB" ? quoteAmt.toFixed(4) : quoteAmt.toFixed(2))
+        : "0.00";
+
+      const lpVal = Math.sqrt(Math.max(0, targetAmt * quoteAmt));
+      estLpTokens.textContent = `${lpVal > 0 ? lpVal.toFixed(2) : "0"} LP`;
+
+      const days = normalizeLockDays();
+      if (enableLpLock.checked) {
+        lockDaysInput.disabled = false;
+        lockSummaryText.textContent = `锁定 ${days} 天`;
+        unlockDateText.textContent = formatUnlockDate(days);
+        addLiquidityBtn.textContent = `添加并锁定流动性（${days} 天）`;
+      } else {
+        lockDaysInput.disabled = true;
+        lockSummaryText.textContent = "未开启锁仓";
+        unlockDateText.textContent = "随时可撤池";
+        addLiquidityBtn.textContent = "添加流动性";
+      }
+
+      addLiquidityBtn.disabled = !walletConnected || !detectedToken.hasBalance;
+    }
+
+    checkTokenHoldBtn.addEventListener("click", async () => {
+      if (!walletConnected) {
+        showHUD("danger", "连接钱包", "请先连接钱包后再检测代币持仓。");
+        return;
+      }
+      await detectTokenHolding();
+      resetMobileScaleAfterInput(poolContractInput);
+    });
+    poolContractInput.addEventListener("change", detectTokenHolding);
+    poolContractInput.addEventListener("paste", () => {
+      setTimeout(async () => {
+        await detectTokenHolding();
+        resetMobileScaleAfterInput(poolContractInput);
+      }, 60);
+    });
+    poolContractInput.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        await detectTokenHolding();
+        resetMobileScaleAfterInput(poolContractInput);
+      }
+    });
+
+    quoteAssetBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        quoteAssetBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedQuoteAsset = btn.dataset.quote || "BNB";
+        updatePoolPreview();
+      });
+    });
+
+    poolTargetAmt.addEventListener("input", updatePoolPreview);
+    enableLpLock.addEventListener("change", updatePoolPreview);
+
+    lockPresets.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const d = parseInt(chip.dataset.days, 10) || 1;
+        lockDaysInput.value = String(d);
+        syncPresetActive(d);
+        updatePoolPreview();
+      });
+    });
+
+    lockDaysInput.addEventListener("input", () => {
+      const raw = parseInt(lockDaysInput.value, 10);
+      if (!Number.isNaN(raw)) {
+        if (raw > 365) lockDaysInput.value = "365";
+        syncPresetActive(normalizeLockDays());
+      }
+      updatePoolPreview();
+    });
+
+    lockDaysInput.addEventListener("blur", () => {
+      const clamped = normalizeLockDays();
+      lockDaysInput.value = String(clamped);
+      syncPresetActive(clamped);
+      updatePoolPreview();
+    });
+
+    addLiquidityBtn.addEventListener("click", async () => {
+      if (!walletConnected) {
+        showHUD("danger", "未连接钱包", "请先连接钱包后再添加流动性。");
+        return;
+      }
+      if (!detectedToken.hasBalance) {
+        showHUD("danger", "无可用持仓", `当前钱包未检测到 ${detectedToken.symbol} 余额。`);
+        return;
+      }
+      const targetAmt = parseFloat(poolTargetAmt.value) || 0;
+      if (targetAmt <= 0) {
+        showHUD("danger", "数量无效", "请输入大于 0 的投入代币数量。");
+        return;
+      }
+      if (targetAmt > detectedToken.heldBalance) {
+        showHUD("danger", "余额不足", `超过当前 ${detectedToken.symbol} 可用余额（${detectedToken.heldBalanceText || detectedToken.heldBalance}）。`);
+        return;
+      }
+
+      const days = normalizeLockDays();
+      lockDaysInput.value = String(days);
+      syncPresetActive(days);
+      const lpText = estLpTokens.textContent;
+      const unlockStr = formatUnlockDate(days);
+
+      if (emptyLockAlert && emptyLockAlert.parentNode) {
+        emptyLockAlert.remove();
+      }
+
+      const entry = document.createElement("div");
+      entry.className = "locked-item";
+      entry.innerHTML = `
+        <div class="locked-item-top">
+          <span>${detectedToken.symbol} / ${selectedQuoteAsset}</span>
+          <span class="lock-badge">${enableLpLock.checked ? `锁仓 ${days} 天` : "未锁仓"}</span>
+        </div>
+        <div class="locked-item-meta">
+          投入：${targetAmt} ${detectedToken.symbol} + ${poolQuoteAmt.value} ${selectedQuoteAsset}（${lpText}）<br />
+          ${enableLpLock.checked ? `解锁日期：${unlockStr}` : "状态：未锁仓"}
+        </div>
+      `;
+      lockedLiquidityList.prepend(entry);
+      lockRecordCount += 1;
+      lockCountBadge.textContent = `${lockRecordCount} 笔记录`;
+
+      showHUD(
+        "success",
+        "锁定流动性成功",
+        enableLpLock.checked
+          ? `已添加 ${targetAmt} ${detectedToken.symbol} 与 ${poolQuoteAmt.value} ${selectedQuoteAsset} 流动性并锁仓 ${days} 天，预计解锁日期 ${unlockStr}。`
+          : `已添加 ${targetAmt} ${detectedToken.symbol} 与 ${poolQuoteAmt.value} ${selectedQuoteAsset} 流动性。`
+      );
+
+      poolTargetAmt.value = "";
+      await detectTokenHolding();
+    });
+
+    syncPickerLabels();
+    renderListForSide("from");
+    renderListForSide("to");
+    updateQuote();
+    detectTokenHolding();
+    refreshPromoLinkBox();
+    syncReferralDisplay();
+  </script>
+</body>
+</html>
