@@ -1410,18 +1410,14 @@
       refRuntimeInfo.textContent = `当前暂存推荐人：${pendingReferrer || "无"}｜已锁定 1 级推荐人：${lockedReferrer || "无"}`;
     }
 
-    function buildInviteLink(code) {
-      const cleanCode = encodeURIComponent((code || "GOLDSHEEP-2027").trim());
-      const base = window.location.href.split("?")[0];
-      return `${base}?ref=${cleanCode}`;
-    }
-
     function refreshPromoLinkBox() {
-      const link = buildInviteLink(promoCodeInput.value);
-      promoStatus.textContent = `邀请链接：${link}`;
-    }
+  const activeAddr = typeof walletAddress !== "undefined" ? walletAddress : "";
+  if (typeof renderNodePanel === "function") {
+    renderNodePanel(activeAddr);
+  }
+}
 
-    const NODE_TOKEN_SYMBOL = "GOLDSHEEP";
+const NODE_TOKEN_SYMBOL = "GOLDSHEEP";
 const NODE_REF_RATE = 0.3;
 
 function buildNodeInviteCode(addr) {
