@@ -1421,29 +1421,134 @@
       promoStatus.textContent = `邀请链接：${link}`;
     }
 
-    copyPromoBtn.addEventListener("click", async () => {
-      const link = buildInviteLink(promoCodeInput.value);
-      promoStatus.textContent = `邀请链接：${link}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        try {
-          await navigator.clipboard.writeText(link);
-          showHUD("success", "复制成功", "邀请链接已复制到剪贴板。");
-        } catch (_) {
-          showHUD("success", "已生成邀请链接", "链接已生成，可复制下方地址分享。");
-        }
-      } else {
+    const NODE_TOKEN_SYMBOL = "GOLDSHEEP";
+const NODE_REF_RATE = 0.3;
+
+function buildNodeInviteCode(addr) {
+  if (!addr || !/^0x[a-fA-F0-9]{40}$/.test(addr.trim())) return "";
+  return `${NODE_TOKEN_SYMBOL.toUpperCase()}${addr.trim().slice(-6).toUpperCase()}`;
+}
+
+function buildNodeInviteLink(addr) {
+  const code = buildNodeInviteCode(addr);
+  if (!code) return "";
+  const url = new URL(window.location.href);
+  url.searchParams.set("ref", code);
+  return url.toString();
+}
+
+function getNodeStats(addr) {
+  if (!addr) return { count: 0, users: [], reward: 0 };
+  try {
+    const raw = localStorage.getItem(`gs_node_stats_${addr.toLowerCase()}`);
+    if (!raw) return { count: 0, users: [], reward: 0 };
+    const parsed = JSON.parse(raw);
+    return {
+      count: Number(parsed.count || 0),
+      users: Array.isArray(parsed.users) ? parsed.users : [],
+      reward: Number(parsed.reward || 0),
+    };
+  } catch {
+    return { count: 0, users: [], reward: 0 };
+  }
+}
+
+function saveNodeStats(addr, stats) {
+  if (!addr) return;
+  localStorage.setItem(`gs_node_stats_${addr.toLowerCase()}`, JSON.stringify(stats));
+}
+
+function renderNodePanel(addr) {
+  const inputEl = document.getElementById("promoCodeInput");
+  const statusEl = document.getElementById("promoStatus");
+  const countEl = document.getElementById("nodeRefCount");
+  const rewardEl = document.getElementById("nodeRefReward");
+
+  const validAddr = addr && /^0x[a-fA-F0-9]{40}$/.test(addr.trim()) ? addr.trim() : "";
+
+  if (!validAddr) {
+    if (inputEl) inputEl.value = "";
+    if (statusEl) statusEl.textContent = "请先连接钱包生成专属邀请码";
+    if (countEl) countEl.textContent = "0";
+    if (rewardEl) rewardEl.textContent = "0.0000";
+    return;
+  }
+
+  const code = buildNodeInviteCode(validAddr);
+  const link = buildNodeInviteLink(validAddr);
+  const stats = getNodeStats(validAddr);
+
+  if (inputEl) inputEl.value = code;
+  if (statusEl) statusEl.textContent = `专属链接已就绪：${link}`;
+  if (countEl) countEl.textContent = String(stats.count);
+  if (rewardEl) rewardEl.textContent = stats.reward.toFixed(4);
+}
+
+(function bindIncomingRef() {
+  const params = new URLSearchParams(window.location.search);
+  const refVal = (params.get("ref") || "").trim();
+  if (refVal && !localStorage.getItem("gs_bound_ref")) {
+    localStorage.setItem("gs_bound_ref", refVal);
+  }
+})();
+
+function recordSwapReferralLocal(buyerAddr, feeAmount = 0) {
+  const boundRef = localStorage.getItem("gs_bound_ref");
+  if (!boundRef || !buyerAddr) return;
+  const buyerLower = buyerAddr.toLowerCase();
+  const statsKeyPrefix = "gs_node_stats_";
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (!k || !k.startsWith(statsKeyPrefix)) continue;
+    const ownerAddr = k.slice(statsKeyPrefix.length);
+    if (buildNodeInviteCode(ownerAddr) === boundRef.toUpperCase() && ownerAddr !== buyerLower) {
+      const st = getNodeStats(ownerAddr);
+      if (!st.users.includes(buyerLower)) {
+        st.users.push(buyerLower);
+        st.count = st.users.length;
+      }
+      st.reward = Number((st.reward + (Number(feeAmount) || 0) * NODE_REF_RATE).toFixed(6));
+      saveNodeStats(ownerAddr, st);
+      if (typeof walletAddress !== "undefined" && walletAddress.toLowerCase() === ownerAddr) {
+        renderNodePanel(walletAddress);
+      }
+      break;
+    }
+  }
+}
+
+copyPromoBtn.addEventListener("click", async () => {
+  const activeAddr = typeof walletAddress !== "undefined" ? walletAddress : "";
+  const link = buildNodeInviteLink(activeAddr);
+  if (!link) {
+    promoStatus.textContent = "请先连接钱包后再生成邀请链接";
+    if (typeof showHUD === "function") {
+      showHUD("danger", "未连接钱包", "请先连接钱包生成专属邀请码。");
+    }
+    return;
+  }
+  if (promoCodeInput) {
+    promoCodeInput.value = buildNodeInviteCode(activeAddr);
+  }
+  promoStatus.textContent = `邀请链接：${link}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    try {
+      await navigator.clipboard.writeText(link);
+      if (typeof showHUD === "function") {
+        showHUD("success", "复制成功", "专属邀请链接已复制到剪贴板。");
+      }
+    } catch (_) {
+      if (typeof showHUD === "function") {
         showHUD("success", "已生成邀请链接", "链接已生成，可复制下方地址分享。");
       }
-      resetMobileScaleAfterInput(promoCodeInput);
-    });
-
-    promoCodeInput.addEventListener("input", refreshPromoLinkBox);
-    promoCodeInput.addEventListener("paste", () => {
-      setTimeout(() => {
-        refreshPromoLinkBox();
-        resetMobileScaleAfterInput(promoCodeInput);
-      }, 50);
-    });
+    }
+  } else if (typeof showHUD === "function") {
+    showHUD("success", "已生成邀请链接", "链接已生成，可复制下方地址分享。");
+  }
+  if (typeof resetMobileScaleAfterInput === "function" && promoCodeInput) {
+    resetMobileScaleAfterInput(promoCodeInput);
+  }
+});
 
     function getTokenBySymbol(sym) {
       return tokenList.find(t => t.symbol.toUpperCase() === String(sym).toUpperCase()) || tokenList[0];
