@@ -1938,27 +1938,41 @@
         }
         await ensureBscChain();
         walletConnected = true;
-        connectWalletBtn.textContent = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
-        disconnectWalletBtn.style.display = "inline-block";
-        await refreshAllWalletBalances();
-        swapStatus.textContent = `已连接钱包：${walletAddress}`;
-        updateQuote();
-        detectTokenHolding();
-      } catch (err) {
-        showHUD("danger", "连接取消", err.message || "钱包连接已取消。");
-      }
-    });
+connectWalletBtn.textContent = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+disconnectWalletBtn.style.display = "inline-block";
+await refreshAllWalletBalances();
+swapStatus.textContent = `已连接钱包: ${walletAddress}`;
+updateQuote();
+detectTokenHolding();
+if (typeof renderNodePanel === "function") {
+  renderNodePanel(walletAddress);
+}
+} catch (err) {
+  showHUD("danger", "连接取消", err.message || "钱包连接已取消。 ");
+}
+});
 
-    disconnectWalletBtn.addEventListener("click", () => {
-      balanceSyncSeq += 1;
-      walletConnected = false;
-      walletAddress = "";
-      rawExpectedOut = 0n;
-      activeRoutePath = [];
-      tokenList.forEach(t => {
-        t.balance = 0;
-        t.balanceText = "0";
-      });
+disconnectWalletBtn.addEventListener("click", () => {
+  balanceSyncSeq += 1;
+  walletConnected = false;
+  if (typeof renderNodePanel === "function") {
+    renderNodePanel(null);
+  }
+  walletAddress = "";
+  rawExpectedOut = 0n;
+  activeRoutePath = [];
+  tokenList.forEach(t => {
+    t.balance = 0;
+    t.balanceText = "0";
+  });
+  connectWalletBtn.textContent = "连接钱包";
+  disconnectWalletBtn.style.display = "none";
+  fromAmount.value = "";
+  toAmount.value = "0";
+  swapStatus.textContent = "已断开钱包连接。";
+  updateQuote();
+  detectTokenHolding();
+});
       connectWalletBtn.textContent = "连接钱包";
       disconnectWalletBtn.style.display = "none";
       fromAmount.value = "";
