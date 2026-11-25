@@ -1242,12 +1242,15 @@
       <section class="view-section" id="view-promo">
         <div class="card-grid">
           <div class="sub-card">
-            <h3>地推节点邀请链接</h3>
-            <p>输入节点编号或邀请人标识，一键复制带邀请链接（下级通过链接进入 Swap 兑换成交后锁定 1 级关系）。</p>
-            <input class="ref-input" id="promoCodeInput" type="text" placeholder="输入节点编号或邀请人标识，例如：NODE-2027-01" value="GOLDSHEEP-2027" />
-            <button type="button" class="wallet-btn" id="copyPromoBtn" style="width: 100%;">生成并复制邀请链接</button>
-            <div class="notice-box" id="promoStatus">邀请链接已就绪</div>
-          </div>
+  <h3>地推节点邀请链接</h3>
+  <p>连接钱包后自动生成专属邀请码（币名+地址后6位大写），一键复制带邀请链接（下级通过链接进入 Swap 兑换成交后锁定 1 级关系）。</p>
+  <input class="ref-input" id="promoCodeInput" type="text" placeholder="连接钱包后自动生成专属邀请码" value="" readonly />
+  <button type="button" class="wallet-btn" id="copyPromoBtn" style="width: 100%;">生成并复制邀请链接</button>
+  <div class="notice-box" id="promoStatus">请先连接钱包生成专属邀请码</div>
+  <div class="notice-box" id="nodeStatsBox" style="margin-top: 8px;">
+    累计推荐人数：<strong id="nodeRefCount">0</strong> ｜ 累计预估收益（30%）：<strong id="nodeRefReward">0.0000</strong>
+  </div>
+</div>
           <div class="sub-card">
             <h3>1 级直推与手续费池拨款说明</h3>
             <p>
