@@ -758,6 +758,69 @@
       margin-bottom: 12px;
     }
 
+    .comm-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(12, 10, 15, 0.84);
+      border: 1px solid var(--line-soft);
+      margin-bottom: 10px;
+    }
+
+    .comm-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .comm-meta {
+      min-width: 0;
+    }
+
+    .comm-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .comm-val {
+      font-size: 12px;
+      color: var(--gold-bright);
+      word-break: break-all;
+    }
+
+    .comm-link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--gold-bright), #df8f16);
+      color: #160e02;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .comm-copy-btn {
+      background: rgba(245, 185, 66, 0.16);
+      color: var(--gold-bright);
+      border: 1px solid rgba(245, 185, 66, 0.42);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
     .ref-input {
       width: 100%;
       background: rgba(12, 10, 15, 0.88);
@@ -1232,6 +1295,40 @@
       <section class="view-section" id="view-community">
         <div class="card-grid">
           <div class="sub-card">
+            <h3>金羊官方渠道与 QQ 社群</h3>
+            <p>官方推特点击直接跳转；QQ 社群点击复制群号后弹出复制成功提示，请打开手机 QQ 添加群号加入。</p>
+
+            <div class="comm-item">
+              <div class="comm-meta">
+                <div class="comm-name">金羊官方推特（X）</div>
+                <div class="comm-val">https://x.com/goldsheep_2027?s=11</div>
+              </div>
+              <a
+                class="comm-link-btn"
+                href="https://x.com/goldsheep_2027?s=11"
+                target="_blank"
+                rel="noopener noreferrer"
+              >前往推特</a>
+            </div>
+
+            <div class="comm-item">
+              <div class="comm-meta">
+                <div class="comm-name">雷神社区（QQ 群 1）</div>
+                <div class="comm-val">1103643863</div>
+              </div>
+              <button type="button" class="comm-copy-btn" data-copy-qq="1103643863" data-qq-label="雷神社区（QQ 群 1）">复制群号</button>
+            </div>
+
+            <div class="comm-item">
+              <div class="comm-meta">
+                <div class="comm-name">雷神社区（QQ 群 2）</div>
+                <div class="comm-val">1064645562</div>
+              </div>
+              <button type="button" class="comm-copy-btn" data-copy-qq="1064645562" data-qq-label="雷神社区（QQ 群 2）">复制群号</button>
+            </div>
+          </div>
+
+          <div class="sub-card">
             <h3>金羊社区中心</h3>
             <p>聚合社群活动、线下见面会与生态动态入口，便于地推人员快速拉群与引导新用户加入。</p>
             <div class="notice-box">推广机制：设立 1 级直推模式，不设多级分销。关系锁定：下级通过邀请链接进入并在兑换成交后，正式锁定 1 级归属。收益发放：协议手续费池按 30% 比例直接拨付给 1 级推荐人。</div>
@@ -1386,6 +1483,49 @@
       }
     });
 
+    async function copyTextWithFeedback(text, successTitle, successDesc) {
+      let copied = false;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(text);
+          copied = true;
+        } catch (_) {}
+      }
+      if (!copied) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          copied = document.execCommand("copy");
+        } catch (_) {
+          copied = false;
+        }
+        document.body.removeChild(ta);
+      }
+      if (copied) {
+        showHUD("success", successTitle, successDesc);
+      } else {
+        showHUD("success", successTitle, `${successDesc}\n号码/内容：${text}`);
+      }
+    }
+
+    document.querySelectorAll("[data-copy-qq]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const qqNum = (btn.dataset.copyQq || "").trim();
+        const label = btn.dataset.qqLabel || "QQ 社群";
+        if (!qqNum) return;
+        await copyTextWithFeedback(
+          qqNum,
+          "复制成功",
+          `${label} 群号 ${qqNum} 已复制到剪贴板，请前往 QQ 搜索加入。`
+        );
+      });
+    });
+
     function resetMobileScaleAfterInput(inputEl) {
       if (inputEl && typeof inputEl.blur === "function") {
         inputEl.blur();
@@ -1527,20 +1667,7 @@
         promoCodeInput.value = buildNodeInviteCode(activeAddr);
       }
       promoStatus.textContent = `邀请链接：${link}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        try {
-          await navigator.clipboard.writeText(link);
-          if (typeof showHUD === "function") {
-            showHUD("success", "复制成功", "专属邀请链接已复制到剪贴板。");
-          }
-        } catch (_) {
-          if (typeof showHUD === "function") {
-            showHUD("success", "已生成邀请链接", "链接已生成，可复制下方地址分享。");
-          }
-        }
-      } else if (typeof showHUD === "function") {
-        showHUD("success", "已生成邀请链接", "链接已生成，可复制下方地址分享。");
-      }
+      await copyTextWithFeedback(link, "复制成功", "专属邀请链接已复制到剪贴板。");
       if (typeof resetMobileScaleAfterInput === "function" && promoCodeInput) {
         resetMobileScaleAfterInput(promoCodeInput);
       }
@@ -1569,6 +1696,27 @@
       const remPart = (rawBigInt % divisor).toString().padStart(safeDec, "0");
       const trimmedFrac = remPart.slice(0, maxFraction).replace(/0+$/, "");
       return trimmedFrac ? `${intPart.toString()}.${trimmedFrac}` : intPart.toString();
+    }
+
+    function formatSafeMaxInput(tokenInfo) {
+      if (!tokenInfo) return "0";
+      if (tokenInfo.isNative) {
+        const rawKeep = 10n ** 15n; // 0.001 BNB Gas reserve
+        const rawBal = parseUnits(tokenInfo.balanceText || String(tokenInfo.balance || 0), 18);
+        const usable = rawBal > rawKeep ? rawBal - rawKeep : 0n;
+        return usable > 0n ? formatUnitsExact(usable, 18, 6) : "0";
+      }
+      const rawText = String(tokenInfo.balanceText || "");
+      if (rawText && !rawText.includes("e") && !rawText.includes("E")) {
+        const parts = rawText.split(".");
+        if (parts.length === 1) return parts[0] || "0";
+        const trimmedFrac = parts[1].slice(0, 4).replace(/0+$/, "");
+        return trimmedFrac ? `${parts[0]}.${trimmedFrac}` : (parts[0] || "0");
+      }
+      const numVal = Number(tokenInfo.balance) || 0;
+      if (numVal <= 0) return "0";
+      const floored = Math.floor(numVal * 10000) / 10000;
+      return floored > 0 ? String(floored) : "0";
     }
 
     function decimalStrToNumber(decStr) {
@@ -1974,8 +2122,7 @@
         return;
       }
       const fInfo = getTokenBySymbol(selectedFromSym);
-      const maxVal = fInfo.isNative ? Math.max(0, fInfo.balance - 0.001) : fInfo.balance;
-      fromAmount.value = maxVal > 0 ? String(Number(maxVal.toFixed(6))) : "0";
+      fromAmount.value = formatSafeMaxInput(fInfo);
       updateQuote();
     });
 
@@ -2160,15 +2307,15 @@
 
       const fInfo = getTokenBySymbol(selectedFromSym);
       const tInfo = getTokenBySymbol(selectedToSym);
+      const amountInRaw = parseUnits(fromAmount.value, fInfo.decimals || 18);
 
-      if (amt > fInfo.balance) {
+      if (amountInRaw <= 0n || amt > fInfo.balance + 0.0001) {
         showHUD("danger", "兑换失败", `当前 ${fInfo.symbol} 余额为 ${fInfo.balanceText || fInfo.balance}，余额不足。`);
         return;
       }
 
       try {
         await ensureBscChain();
-        const amountInRaw = parseUnits(fromAmount.value, fInfo.decimals || 18);
         const qRes = await quoteFromPancakeRouter(fInfo, tInfo, amountInRaw);
         const baseOut = qRes && qRes.amountOut > 0n ? qRes.amountOut : rawExpectedOut;
         const routeToUse = qRes && qRes.path ? qRes.path : activeRoutePath;
@@ -2178,7 +2325,8 @@
           return;
         }
 
-        const slipBps = BigInt(Math.max(0, Math.min(9900, Math.round(slippagePct * 100))));
+        const effectiveSlip = !fInfo.isNative && slippagePct < 5 ? 5 : slippagePct;
+        const slipBps = BigInt(Math.max(0, Math.min(9900, Math.round(effectiveSlip * 100))));
         const minOutRaw = (baseOut * (10000n - slipBps)) / 10000n;
         const deadline = Math.floor(Date.now() / 1000) + 600;
 
