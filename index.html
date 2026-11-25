@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -1330,8 +1331,7 @@
 
           <div class="sub-card">
             <h3>金羊社区中心</h3>
-            <p>聚合社群活动、线下见面会与生态动态入口，便于地推人员快速拉群与引导新用户加入。</p>
-            <div class="notice-box">推广机制：设立 1 级直推模式，不设多级分销。关系锁定：下级通过邀请链接进入并在兑换成交后，正式锁定 1 级归属。收益发放：协议手续费池按 30% 比例直接拨付给 1 级推荐人。</div>
+            <p>携手雷神社区践行长期主义，同步社群活动、线下地推与生态动态，助力推手稳步拉群、扎实沉淀共识，引导新成员长久融入。</p>
           </div>
         </div>
       </section>
@@ -1701,7 +1701,7 @@
     function formatSafeMaxInput(tokenInfo) {
       if (!tokenInfo) return "0";
       if (tokenInfo.isNative) {
-        const rawKeep = 10n ** 15n; // 0.001 BNB Gas reserve
+        const rawKeep = 10n ** 15n;
         const rawBal = parseUnits(tokenInfo.balanceText || String(tokenInfo.balance || 0), 18);
         const usable = rawBal > rawKeep ? rawBal - rawKeep : 0n;
         return usable > 0n ? formatUnitsExact(usable, 18, 6) : "0";
