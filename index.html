@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -862,8 +861,8 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 14px;
       padding: 10px 4px;
       color: var(--muted);
@@ -873,8 +872,32 @@
     }
 
     .bottom-nav-icon {
-      font-size: 18px;
-      transition: transform 0.2s ease;
+      display: inline-grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      font-size: 20px;
+      color: #f4e6be;
+      background: rgba(245, 185, 66, 0.12);
+      border: 1px solid rgba(245, 185, 66, 0.28);
+      text-shadow: 0 0 10px rgba(255, 224, 138, 0.35);
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .bottom-nav-btn[data-view="swap"] .bottom-nav-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
+      font-size: 25px;
+      font-weight: 900;
+      color: #fff2c2;
+      background: linear-gradient(145deg, rgba(255, 224, 138, 0.28), rgba(245, 185, 66, 0.14));
+      border: 1.5px solid rgba(255, 224, 138, 0.72);
+      box-shadow:
+        0 0 18px rgba(245, 185, 66, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      text-shadow: 0 0 14px rgba(255, 224, 138, 0.75);
     }
 
     .bottom-nav-btn span:last-child {
@@ -893,6 +916,15 @@
     }
 
     .bottom-nav-btn.active .bottom-nav-icon {
+      color: #1a1002;
+      background: rgba(255, 255, 255, 0.28);
+      border-color: rgba(26, 16, 2, 0.25);
+      box-shadow: none;
+      text-shadow: none;
+      transform: scale(1.12);
+    }
+
+    .bottom-nav-btn[data-view="swap"].active .bottom-nav-icon {
       transform: scale(1.18);
     }
 
@@ -1331,7 +1363,7 @@
 
           <div class="sub-card">
             <h3>金羊社区中心</h3>
-            <p>携手雷神社区践行长期主义，同步社群活动、线下地推与生态动态，助力推手稳步拉群、扎实沉淀共识，引导新成员长久融入。</p>
+            <p>依托雷神社区坚实底座，坚持长期主义与稳步共建。这里汇聚线下地推交流、社群活动与项目实时进展，帮助每一位推手把短期热度沉淀为长久共识，有序拉群、带新成员看懂生态并稳步进群。</p>
           </div>
         </div>
       </section>
